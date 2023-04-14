@@ -18,4 +18,4 @@
 ## 项目技术栈
 
 - 前端：react + ts
-- 后端：java ssm
+- 后端：java springboot mybatisplus
