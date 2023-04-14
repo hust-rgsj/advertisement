@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ad.mapper.TbUserMapper">
+<mapper namespace="com.be.mapper.TbUserMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.ad.entity.User">
+    <resultMap id="BaseResultMap" type="com.be.entity.TbUser">
         <result column="id" property="id" />
         <result column="name" property="name" />
         <result column="username" property="username" />

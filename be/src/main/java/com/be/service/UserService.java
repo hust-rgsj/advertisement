@@ -1,6 +1,6 @@
-package com.ad.service;
+package com.be.service;
 
-import com.ad.entity.User;
+import com.be.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

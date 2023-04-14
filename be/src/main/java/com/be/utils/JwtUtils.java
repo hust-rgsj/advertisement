@@ -1,13 +1,11 @@
-package com.ad.utils;
+package com.be.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-
 import java.util.Date;
 import java.util.Map;
-
 
 public class JwtUtils {
     private  static  String signKey = "ad";

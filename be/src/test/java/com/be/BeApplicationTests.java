@@ -1,13 +1,13 @@
-package com.ad;
+package com.be;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AdApplicationTests {
+class BeApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+	@Test
+	void contextLoads() {
+	}
 
 }

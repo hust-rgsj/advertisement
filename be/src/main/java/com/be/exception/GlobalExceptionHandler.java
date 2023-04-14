@@ -1,6 +1,6 @@
-package com.ad.exception;
+package com.be.exception;
 
-import com.ad.dto.R;
+import com.be.dto.R;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -14,4 +14,5 @@ public class GlobalExceptionHandler {
         //捕获到异常之后，响应一个标准的Result
         return R.error("对不起,操作失败,请联系管理员");
     }
+
 }

@@ -1,8 +1,8 @@
-package com.ad.filter;
+package com.be.filter;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ad.dto.R;
-import com.ad.utils.JwtUtils;
+import com.be.dto.R;
+import com.be.utils.JwtUtils;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,13 +10,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
-
 import java.io.IOException;
 
 @Slf4j
-@WebFilter(urlPatterns = "/*")//拦截所有请求
+@WebFilter(urlPatterns = "/*")
 public class LoginCheckFilter implements Filter {
-
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
@@ -70,4 +68,3 @@ public class LoginCheckFilter implements Filter {
         filterChain.doFilter(request, response);
     }
 }
-
