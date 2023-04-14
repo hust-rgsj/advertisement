@@ -1,7 +1,11 @@
-import "./index.scss";
+import './index.scss';
 
 const Login = (): JSX.Element => {
-  return <div>Hello World</div>;
+  return (
+    <div>
+      <div>login</div>
+    </div>
+  );
 };
 
 export default Login;
