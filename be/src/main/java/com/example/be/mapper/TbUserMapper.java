@@ -1,7 +1,7 @@
-package com.be.mapper;
+package com.example.be.mapper;
 
+import com.example.be.entity.TbUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.be.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -10,9 +10,9 @@ import org.apache.ibatis.annotations.Mapper;
  * </p>
  *
  * @author author
- * @since 2023-04-14
+ * @since 2023-04-16
  */
 @Mapper
-public interface UserMapper extends BaseMapper<User> {
+public interface TbUserMapper extends BaseMapper<TbUser> {
 
 }

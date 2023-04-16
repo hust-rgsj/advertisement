@@ -1,4 +1,4 @@
-package com.be.utils;
+package com.example.be.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

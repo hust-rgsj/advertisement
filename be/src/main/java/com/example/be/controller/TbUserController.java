@@ -1,4 +1,4 @@
-package com.be.controller;
+package com.example.be.controller;
 
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
  * </p>
  *
  * @author author
- * @since 2023-04-14
+ * @since 2023-04-16
  */
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class TbUserController {
 
 }

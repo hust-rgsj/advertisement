@@ -1,4 +1,4 @@
-package com.be.dto;
+package com.example.be.common;
 
 import lombok.Data;
 
