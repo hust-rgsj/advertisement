@@ -7,7 +7,7 @@ const lazyLoad = (Component: React.LazyExoticComponent<() => JSX.Element>) => {
     </Suspense>
   );
 };
-const Login = lazy(() => import('@pages/Login'));
+const Login = lazy(() => import('@/pages/Login/login'));
 
 const router = createBrowserRouter([
   {
