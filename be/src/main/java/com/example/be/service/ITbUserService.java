@@ -1,6 +1,10 @@
 package com.example.be.service;
 
 import com.example.be.entity.TbUser;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
