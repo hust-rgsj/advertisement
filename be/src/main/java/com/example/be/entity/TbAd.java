@@ -19,33 +19,19 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author author
- * @since 2023-04-16
+ * @since 2023-04-17
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("tb_user")
+@TableName("tb_ad")
 @AllArgsConstructor
 @NoArgsConstructor
-public class TbUser implements Serializable {
+public class TbAd implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Integer id;
-
-    private String name;
-
-    private String username;
-
-    private String password;
-
-    private String type;
-
-    private Integer status;
-
-    private BigDecimal prepaid;
-
-    private Integer adCount;
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
@@ -53,6 +39,22 @@ public class TbUser implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
-    private String phone;
+
+    private Integer status;
+
+    private String title;
+
+    private String type;
+
+    private String description;
+
+    private String url;
+
+    private BigDecimal price;
+
+    private LocalDateTime startTime;
+
+    private LocalDateTime endTime;
+
 
 }

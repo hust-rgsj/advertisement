@@ -1,7 +1,5 @@
 package com.example.be.entity;
 
-import java.math.BigDecimal;
-
 import com.baomidou.mybatisplus.annotation.*;
 
 import java.time.LocalDateTime;
@@ -19,15 +17,15 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author author
- * @since 2023-04-16
+ * @since 2023-04-17
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("tb_user")
+@TableName("tb_staff")
 @AllArgsConstructor
 @NoArgsConstructor
-public class TbUser implements Serializable {
+public class TbManager implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -35,17 +33,13 @@ public class TbUser implements Serializable {
 
     private String name;
 
+    private String phone;
+
+    private String idNumber;
+
     private String username;
 
     private String password;
-
-    private String type;
-
-    private Integer status;
-
-    private BigDecimal prepaid;
-
-    private Integer adCount;
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
@@ -53,6 +47,5 @@ public class TbUser implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
-    private String phone;
 
 }

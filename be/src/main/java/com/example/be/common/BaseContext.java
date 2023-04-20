@@ -1,6 +1,8 @@
 package com.example.be.common;
 
-public class BaseContext {private static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
+public class BaseContext {
+
+    private static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
 
     /**
      * 设置值
