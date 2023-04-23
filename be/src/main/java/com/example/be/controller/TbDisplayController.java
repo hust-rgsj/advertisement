@@ -24,7 +24,7 @@ import java.util.List;
  * @since 2023-04-19
  */
 @RestController
-@RequestMapping("/display")
+@RequestMapping("/customer/advertisement/display")
 public class TbDisplayController {
 
     @Autowired
@@ -55,10 +55,9 @@ public class TbDisplayController {
         return ad;
     }
 
-    @PostMapping("/update")
+    @GetMapping("/update")
     @Transactional
-    public void update(@RequestBody TbAd ad){
-        Integer adId = ad.getId();
+    public void update(Integer adId){
         TbDisplay display = displayService.getById(adId);
         clickCount++;
         display.setClickCount(clickCount);
@@ -67,5 +66,7 @@ public class TbDisplayController {
         display.setConversionRate(conversionRate);
         displayService.updateById(display);
     }
+
+
 
 }

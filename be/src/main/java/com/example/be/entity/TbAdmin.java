@@ -1,11 +1,8 @@
 package com.example.be.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 
 import lombok.AllArgsConstructor;
@@ -20,26 +17,35 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author author
- * @since 2023-04-19
+ * @since 2023-04-17
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("tb_order")
+@TableName("tb_admin")
 @AllArgsConstructor
 @NoArgsConstructor
-public class TbOrder implements Serializable {
+public class TbAdmin implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Integer id;
-    private Integer customerId;
 
-    private LocalDateTime payTime;
+    private String name;
 
-    private Integer adId;
+    private String phone;
 
-    private BigDecimal amount;
+    private String idNumber;
+
+    private String username;
+
+    private String password;
+
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
+
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateTime;
 
 
 }
