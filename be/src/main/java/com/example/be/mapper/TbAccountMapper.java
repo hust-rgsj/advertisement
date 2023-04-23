@@ -1,11 +1,8 @@
 package com.example.be.mapper;
 
-import com.example.be.entity.TbUser;
+import com.example.be.entity.TbAccount;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-
-import java.util.List;
 
 /**
  * <p>
@@ -13,9 +10,9 @@ import java.util.List;
  * </p>
  *
  * @author author
- * @since 2023-04-16
+ * @since 2023-04-21
  */
 @Mapper
-public interface TbUserMapper extends BaseMapper<TbUser> {
+public interface TbAccountMapper extends BaseMapper<TbAccount> {
 
 }

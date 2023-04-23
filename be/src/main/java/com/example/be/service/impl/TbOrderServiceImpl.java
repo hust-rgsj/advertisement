@@ -1,5 +1,6 @@
 package com.example.be.service.impl;
 
+import com.example.be.common.Status;
 import com.example.be.entity.TbAd;
 import com.example.be.entity.TbOrder;
 import com.example.be.mapper.TbOrderMapper;
@@ -24,12 +25,14 @@ import java.time.LocalDateTime;
 public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder> implements ITbOrderService {
 
     @Autowired
-    private ITbAdService adServiceService;
+    private ITbAdService adService;
 
     @Override
     public void submit(TbOrder order) {
         Integer adId = order.getAdId();
-        TbAd ad = adServiceService.getById(adId);
+        TbAd ad = adService.getById(adId);
+        ad.setStatus(Status.NOT_PAID);
+        adService.updateById(ad);
         order.setAmount(ad.getPrice());
         order.setPayTime(LocalDateTime.now());
         this.save(order);
@@ -38,7 +41,7 @@ public class TbOrderServiceImpl extends ServiceImpl<TbOrderMapper, TbOrder> impl
     @Override
     public TbAd check(TbOrder order) {
         Integer adId = order.getAdId();
-        TbAd ad = adServiceService.getById(adId);
+        TbAd ad = adService.getById(adId);
         return ad;
     }
 }

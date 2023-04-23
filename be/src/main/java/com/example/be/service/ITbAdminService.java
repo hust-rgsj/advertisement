@@ -1,6 +1,6 @@
 package com.example.be.service;
 
-import com.example.be.entity.TbManager;
+import com.example.be.entity.TbAdmin;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author author
  * @since 2023-04-17
  */
-public interface ITbManagerService extends IService<TbManager> {
+public interface ITbAdminService extends IService<TbAdmin> {
 
 }

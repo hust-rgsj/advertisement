@@ -1,6 +1,6 @@
 package com.example.be.mapper;
 
-import com.example.be.entity.TbManager;
+import com.example.be.entity.TbAdmin;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2023-04-17
  */
 @Mapper
-public interface TbManagerMapper extends BaseMapper<TbManager> {
+public interface TbAdminMapper extends BaseMapper<TbAdmin> {
 
 }

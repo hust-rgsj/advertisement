@@ -1,8 +1,8 @@
 package com.example.be.service.impl;
 
-import com.example.be.entity.TbManager;
-import com.example.be.mapper.TbManagerMapper;
-import com.example.be.service.ITbManagerService;
+import com.example.be.entity.TbAdmin;
+import com.example.be.mapper.TbAdminMapper;
+import com.example.be.service.ITbAdminService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since 2023-04-17
  */
 @Service
-public class TbManagerServiceImpl extends ServiceImpl<TbManagerMapper, TbManager> implements ITbManagerService {
+public class TbAdminServiceImpl extends ServiceImpl<TbAdminMapper, TbAdmin> implements ITbAdminService {
 
 }
