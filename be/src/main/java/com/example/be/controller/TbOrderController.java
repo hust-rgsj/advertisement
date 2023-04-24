@@ -43,7 +43,7 @@ public class TbOrderController {
     @PostMapping("/submit")
     public R<String> submit(@RequestBody TbOrder order){
         orderService.submit(order);
-        Integer userId = order.getUserId();
+        Integer userId = order.getCustomerId();
         TbCustomer user = userService.getById(userId);
         Integer adCount = user.getAdCount() + 1;
         user.setAdCount(adCount);
@@ -62,7 +62,7 @@ public class TbOrderController {
         TbOrder order = orderService.getById(orderId);
         Integer adId = order.getAdId();
         TbAd ad = adService.getById(adId);
-        Integer userId = order.getUserId();
+        Integer userId = order.getCustomerId();
         TbAccount account = accountService.getByUserId(userId);
         BigDecimal balance = account.getBalance().subtract(order.getAmount());
         if (balance.compareTo(new BigDecimal(0)) == -1){

@@ -41,14 +41,12 @@ public class TbCustomerController {
 
     @PostMapping("/logout")
     public R<String> logout(HttpServletRequest request){
-        request.getSession().removeAttribute("user");
-        return R.success("退出成功");
+         return R.success("退出成功");
     }
 
     @PostMapping("/remove")
-    public R<String> remove(HttpServletRequest request, @RequestBody TbCustomer user){
-        request.getSession().removeAttribute("user");
-        userService.removeById(user);
+    public R<String> remove(HttpServletRequest request, @RequestBody TbCustomer customer){
+        userService.removeById(customer);
         return R.success("注销成功");
     }
 
@@ -76,28 +74,6 @@ public class TbCustomerController {
         userService.updateById(user);
 
         return R.success(user);
-    }
-
-    @PostMapping("/add")
-    public R<String> add(@RequestBody TbCustomer user){
-
-        LambdaQueryWrapper<TbCustomer> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(TbCustomer::getUsername,user.getUsername());
-        List<TbCustomer> list = userService.list(queryWrapper);
-        if(list != null){
-            return R.error("该用户已存在");
-        }
-        String password = DigestUtils.md5DigestAsHex(user.getPassword().getBytes());
-        user.setPassword(password);
-        user.setStatus(Status.RUNNING);
-        user.setAccountId(user.getId());
-        user.setCreateTime(LocalDateTime.now());
-        user.setUpdateTime(LocalDateTime.now());
-
-        userService.save(user);
-
-
-        return R.success("注册成功");
     }
 
     @PostMapping("/status")

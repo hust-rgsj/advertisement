@@ -12,5 +12,4 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2023-04-17
  */
 public interface ITbAdService extends IService<TbAd> {
-
 }

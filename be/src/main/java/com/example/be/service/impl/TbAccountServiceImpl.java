@@ -21,7 +21,7 @@ public class TbAccountServiceImpl extends ServiceImpl<TbAccountMapper, TbAccount
     @Override
     public TbAccount getByUserId(Integer userId) {
         LambdaQueryWrapper<TbAccount> queryWrapper = new LambdaQueryWrapper();
-        queryWrapper.eq(TbAccount::getUserId, userId);
+        queryWrapper.eq(TbAccount::getCustomerId, userId);
         TbAccount account = getOne(queryWrapper);
         return account;
     }

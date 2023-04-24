@@ -51,4 +51,6 @@ public class TbCustomer implements Serializable {
 
     private String phone;
 
+    private Integer type;
+
 }
