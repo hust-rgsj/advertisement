@@ -107,7 +107,7 @@ public class LoginController {
         LambdaQueryWrapper<TbCustomer> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(TbCustomer::getUsername,username);
         List<TbCustomer> list = customerService.list(queryWrapper);
-        if(list != null){
+        if(!list.isEmpty()){
             return R.error("该用户已存在");
         }
         log.info("注册{}，{}",username,password);

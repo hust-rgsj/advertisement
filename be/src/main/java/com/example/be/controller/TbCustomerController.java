@@ -69,18 +69,19 @@ public class TbCustomerController {
     }
 
     @PutMapping("/update")
-    public R<TbCustomer> update(HttpServletRequest request, @RequestBody TbCustomer user){
-        user.setUpdateTime(LocalDateTime.now());
-        userService.updateById(user);
+    public R<TbCustomer> update(HttpServletRequest request, @RequestBody TbCustomer customer){
+        customer.setUpdateTime(LocalDateTime.now());
+        userService.updateById(customer);
 
-        return R.success(user);
+        return R.success(customer);
     }
 
     @PostMapping("/status")
-    public void status(Integer status, Integer userId){
-        TbCustomer user = userService.getById(userId);
-        user.setStatus(status);
-        userService.updateById(user);
+    public R<String> status(Integer status, Integer customerId){
+        TbCustomer customer = userService.getById(customerId);
+        customer.setStatus(status);
+        userService.updateById(customer);
+        return R.success("修改成功");
     }
 
     @PostMapping("/page")
