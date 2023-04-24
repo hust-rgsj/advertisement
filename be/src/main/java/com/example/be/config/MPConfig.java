@@ -18,7 +18,6 @@ public class MPConfig {
         mpInterceptor.addInnerInterceptor(new PaginationInnerInterceptor());
         return mpInterceptor;
     }
-
 }
 
 
