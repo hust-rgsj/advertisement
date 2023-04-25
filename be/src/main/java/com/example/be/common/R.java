@@ -23,7 +23,7 @@ public class R<T> {
     public static <T> R<T> success(T object,String msg){
         R<T> r = new R<T>();
         r.data = object;
-        r.code = 500;
+        r.code = 200;
         r.msg = msg;
         return r;
     }
