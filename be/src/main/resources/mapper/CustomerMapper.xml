@@ -15,6 +15,9 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="phone" property="phone" />
+        <result column="company" property="company"/>
+        <result column="company_address" property="companyAddress"/>
+        <result column="company_phonr" property="companyPhone"/>
     </resultMap>
 
 </mapper>
