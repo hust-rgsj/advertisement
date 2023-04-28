@@ -114,11 +114,12 @@ public class AdController {
     }
 
     @PostMapping("/upload")
-    public R<String> upload(MultipartFile file) throws Exception {
+    public R<String> upload(MultipartFile file,Integer adId) throws Exception {
         String url = aliOSSUtils.upload(file);
+        Ad ad = adService.getById(adId);
+        ad.setUrl(url);
+        adService.updateById(ad);
         return R.success(url);
     }
-
-
 
 }

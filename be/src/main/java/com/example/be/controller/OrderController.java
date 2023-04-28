@@ -32,7 +32,7 @@ public class OrderController {
     private IOrderService orderService;
 
     @Autowired
-    private ICustomerService userService;
+    private ICustomerService customerService;
 
     @Autowired
     private IAccountService accountService;
@@ -44,10 +44,10 @@ public class OrderController {
     public R<String> submit(@RequestBody Order order){
         orderService.submit(order);
         Integer userId = order.getCustomerId();
-        Customer user = userService.getById(userId);
+        Customer user = customerService.getById(userId);
         Integer adCount = user.getAdCount() + 1;
         user.setAdCount(adCount);
-        userService.updateById(user);
+        customerService.updateById(user);
         return R.success("订单提交成功,请支付");
     }
 
@@ -75,6 +75,14 @@ public class OrderController {
         ad.setStatus(Status.PAID);
         adService.updateById(ad);
         return R.success("支付成功");
+    }
+
+    @GetMapping("/recharge")
+    public  R<BigDecimal> recharger(Integer accountId, BigDecimal amount){
+        Account account = accountService.getByUserId(accountId);
+        BigDecimal balance = account.getBalance().add(amount);
+        account.setBalance(balance);
+        return R.success(balance);
     }
 
 }
