@@ -67,7 +67,7 @@ public class AdController {
         if(status == Status.NOT_PASS){
             ad.setStatus(status);
             adService.updateById(ad);
-            return R.error("审核不通过，原因为："+reason+",请修改");
+            return R.success("审核不通过，原因为："+reason+",请修改");
         }
         return null;
     }
