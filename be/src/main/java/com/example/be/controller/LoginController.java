@@ -69,7 +69,7 @@ public class LoginController {
 
             Logindto result = new Logindto(jwt,admin.getId(),admin.getType(),expire);
 
-            return R.success(result,"登录成功");
+            return R.success(result);
         }
 
         else{
@@ -92,7 +92,7 @@ public class LoginController {
             Long expire = decode.getExpiration().getTime() / 1000;
 
             Logindto result = new Logindto(jwt,customer.getId(),customer.getType(),expire);
-            return R.success(result,"登录成功");        }
+            return R.success(result);        }
 
     }
 
