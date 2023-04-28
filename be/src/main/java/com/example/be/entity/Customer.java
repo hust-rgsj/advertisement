@@ -53,4 +53,9 @@ public class Customer implements Serializable {
 
     private Integer type;
 
+    private String company;
+
+    private String companyAddress;
+
+    private String companyPhone;
 }
