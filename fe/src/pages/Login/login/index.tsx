@@ -1,33 +1,104 @@
 import './index.scss';
-import { Card, Form, Input, Button } from 'antd';
+import { Card, Form, Input, Button, message } from 'antd';
 import { Link } from 'react-router-dom';
 import { LoginBackGround } from '@/components';
+import { useState, useRef } from 'react';
+import { Login } from '@/type';
+import { login, register } from '@/api';
+import { useNavigate } from 'react-router-dom';
 
-const Login = (): JSX.Element => {
-  function onFinish(values: Login) {}
+const [messageApi] = message.useMessage();
+const navigate = useNavigate();
+
+const LoginPage = (): JSX.Element => {
+  const [isRegister, setIsRegister] = useState(false);
+  const [isPasswdRig, setIsPasswdRig] = useState(true);
+  const [isReinputRig, setIsReinputRig] = useState(false);
+  async function onFinish(values: Login) {
+    const { username, password } = values;
+    if (isRegister) register({ username, password });
+    else {
+      handlerLogin({ username, password });
+    }
+  }
+  // 这里就不写双向绑定了，只是一个获取值
+  let passwd = useRef('');
+  let rePasswd = useRef('');
+  function changePasswd(e: any) {
+    passwd.current = e.target.value;
+    if (rePasswd.current != passwd.current && rePasswd.current !== '') setIsPasswdRig(false);
+    else setIsPasswdRig(true);
+  }
+  function changeConfirmPasswd(e: any) {
+    rePasswd.current = e.target.value;
+    if (rePasswd.current != passwd.current && rePasswd.current !== '') setIsPasswdRig(false);
+    else setIsPasswdRig(true);
+  }
 
   return (
     <div className="container">
-      <Card title="账户登录" className="login-card">
-        <Form onFinish={onFinish}>
-          <Form.Item name="username">
-            <Input size="large" prefix="账户" placeholder="请输入用户名" />
+      <Card title={isRegister ? '账户注册' : '账户登录'} className="login-card">
+        <Form onFinish={onFinish} autoComplete="off">
+          <div>
+            用户名
+            <Form.Item name="username" rules={[{ required: true }]}>
+              <Input size="large" placeholder="请输入用户名" />
+            </Form.Item>
+          </div>
+          <Form.Item name="password" rules={[{ required: true }]}>
+            <div>
+              密码
+              <Input.Password onChange={changePasswd} size="large" placeholder="请输入密码" />
+            </div>
           </Form.Item>
-          <Form.Item name="password">
-            <Input.Password size="large" prefix="密码" placeholder="请输入密码" />
-          </Form.Item>
+          {isRegister && (
+            <Form.Item
+              name="repasswd"
+              rules={[
+                {
+                  validator: () => {
+                    console.log('validate', isPasswdRig);
+                    if (!isPasswdRig) return Promise.reject(new Error('两次密码不同'));
+                    else return Promise.resolve();
+                  },
+                },
+              ]}
+            >
+              <div>
+                确认密码
+                <Input.Password onChange={changeConfirmPasswd} size="large" placeholder="请确认密码" />
+              </div>
+            </Form.Item>
+          )}
+          <div className="forget-passwd">忘记密码</div>
           <div className="button-group">
-            <Button size="large">
-              <Link to="/register">注册</Link>
-            </Button>
-            <Button type="primary" size="large">
-              登录
+            <Button type="primary" size="large" htmlType="submit">
+              {isRegister ? '注册' : '登录'}
             </Button>
           </div>
         </Form>
+        <div
+          onClick={() => {
+            setIsRegister(!isRegister);
+          }}
+          className="register"
+        >
+          <div className="bg"></div>
+          <span>{isRegister ? '登录' : '注册'}</span>
+        </div>
       </Card>
     </div>
   );
 };
 
-export default Login;
+async function handlerLogin(data: Login) {
+  const res = await login(data);
+  if (res.code === 200) {
+    localStorage.setItem('token', res.data.token);
+    messageApi.info('登录成功！');
+  } else {
+    messageApi.warning(res.msg);
+  }
+}
+
+export default LoginPage;
