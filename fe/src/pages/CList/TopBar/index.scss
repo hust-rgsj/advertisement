@@ -1,0 +1,42 @@
+.top-bar {
+  position: relative;
+  padding: 0 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .flex-item {
+    flex: 1;
+  }
+
+  .top-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .top-refresh {
+    margin-right: 1.5rem;
+
+    & > img {
+      width: 1.8rem;
+      height: 1.8rem;
+    }
+  }
+
+  .top-btn {
+    position: relative;
+    background-color: #2678ff;
+    border-radius: 0.2rem;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & > p {
+      font-size: 1rem;
+      color: #fff;
+    }
+  }
+}

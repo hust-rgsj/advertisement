@@ -1,0 +1,14 @@
+.client-home {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  background-color: #c4c4c4;
+  overflow: hidden;
+
+  .client-content {
+    box-sizing: border-box;
+    position: relative;
+    height: calc(100vh - 100px);
+    width: calc(100vw - 200px);
+  }
+}

@@ -1,0 +1,45 @@
+.adv-card {
+  position: relative;
+  width: 20vw;
+  margin: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background-color: white;
+  box-shadow: 3px 3px 15px rgba($color: #000000, $alpha: 0.2);
+
+  .adv-title {
+    margin: 0.5rem 0;
+
+    & > p {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  }
+
+  .adv-info {
+    display: flex;
+    justify-content: space-around;
+
+    .adv-digest {
+      margin-right: 1rem;
+
+      & > p {
+        font-size: 0.8rem;
+      }
+    }
+
+    .adv-img {
+      position: relative;
+      height: 6rem;
+      width: 6rem;
+      display: flex;
+      justify-content: center;
+
+      & > img {
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+}
