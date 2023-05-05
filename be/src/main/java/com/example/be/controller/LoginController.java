@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -34,11 +33,9 @@ public class LoginController {
     private IAdminService adminService;
 
     @PostMapping("/login")
-    public R<Logindto> login(HttpServletRequest request, @RequestBody Customer tbCustomer){
+    public R<Logindto> login(HttpServletRequest request, String username, String password){
 
 //        password = DigestUtils.md5DigestAsHex(password.getBytes());
-        String username =tbCustomer.getUsername();
-        String password = tbCustomer.getPassword();
         log.info("请求登录{},{}",username,password);
         LambdaQueryWrapper<Customer> queryWrapper1 = new LambdaQueryWrapper<>();
         queryWrapper1.eq(Customer::getUsername,username);
@@ -100,7 +97,7 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public R<String> register(@RequestBody String username,String password){
+    public R<String> register(String username,String password){
 
         LambdaQueryWrapper<Customer> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Customer::getUsername,username);

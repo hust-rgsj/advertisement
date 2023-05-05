@@ -1,22 +1,20 @@
 package com.example.be.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.be.common.R;
-import com.example.be.entity.Ad;
+import com.example.be.common.Status;
+
 import com.example.be.entity.Customer;
 import com.example.be.service.IAdService;
 import com.example.be.service.ICustomerService;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import io.micrometer.common.util.StringUtils;
+
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
+
 
 
 /**
@@ -47,7 +45,7 @@ public class CustomerController {
         return R.success("注销成功");
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public R<Customer> getById(@PathVariable Integer id){
         Customer user = userService.getById(id);
         if(user != null){
@@ -56,7 +54,7 @@ public class CustomerController {
         return R.error("该用户不存在");
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/username/{username}")
     public R<Customer> getByUsername(@PathVariable String username){
         Customer user = userService.getByUsername(username);
         if(user != null){
@@ -78,20 +76,14 @@ public class CustomerController {
         Customer customer = userService.getById(customerId);
         customer.setStatus(status);
         userService.updateById(customer);
-        return R.success("修改成功");
+        if(status == Status.BANNED){
+            return R.success("已成功禁用该账号");
+        }
+        else{
+            return R.success("已解封该账号");
+        }
     }
 
-    @PostMapping("/page")
-    public PageInfo<Ad> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
 
-        PageHelper.startPage(pageNum, 6);
-        LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.likeRight(StringUtils.isNotEmpty(msg), Ad::getDescription,msg);
-        queryWrapper.orderByDesc(Ad::getUpdateTime);
-        List<Ad> list = adService.list(queryWrapper);
-        PageInfo<Ad> pageInfo = new PageInfo<>(list);
-
-        return pageInfo;
-    }
 
 }

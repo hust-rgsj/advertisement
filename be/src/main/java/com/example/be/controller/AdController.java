@@ -4,15 +4,19 @@ package com.example.be.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.be.common.R;
 import com.example.be.common.Status;
+import com.example.be.dto.Addto;
 import com.example.be.entity.Ad;
 import com.example.be.service.IAdService;
 import com.example.be.utils.AliOSSUtils;
+import com.github.pagehelper.PageHelper;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -88,7 +92,7 @@ public class AdController {
     }
 
     @GetMapping("/stop")
-    public R<String> stop(Integer adId){
+    public R<String> stop(@PathVariable  Integer adId){
         Ad ad = adService.getById(adId);
         ad.setStatus(Status.STOP);
         adService.updateById(ad);
@@ -96,7 +100,7 @@ public class AdController {
     }
 
     @GetMapping("/updateStatus")
-    public void updateStatus(LocalDateTime time) {
+    public void updateStatus(@PathVariable LocalDateTime time) {
         LambdaQueryWrapper<Ad> queryWrapper1 = new LambdaQueryWrapper<>();
         queryWrapper1.eq(Ad::getStatus, Status.ON).ge(Ad::getEndTime, time);
         List<Ad> list1 = adService.list(queryWrapper1);
@@ -122,4 +126,33 @@ public class AdController {
         return R.success(url);
     }
 
+    @PostMapping("/page")
+    public List<Addto> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
+
+        PageHelper.startPage(pageNum, 6);
+        LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.likeRight(StringUtils.isNotEmpty(msg), Ad::getTitle,msg);
+        queryWrapper.orderByDesc(Ad::getUpdateTime);
+        List<Ad> list = adService.list(queryWrapper);
+        List<Addto> adList = new ArrayList<>();
+        for (Ad ad : list){
+            Addto addto = new Addto();
+            addto.setId(ad.getId());
+            addto.setTitle(ad.getTitle());
+            addto.setDescription(ad.getDescription());
+            addto.setStatus(ad.getStatus());
+            addto.setUrl(ad.getUrl());
+            addto.setStartTime(ad.getStartTime());
+            addto.setEndTime(ad.getEndTime());
+            adList.add(addto);
+        }
+
+        return adList;
+    }
+
+    @GetMapping("/adId/{adId}")
+    public Ad getByAdId(@PathVariable Integer adId){
+        Ad ad = adService.getById(adId);
+        return ad;
+    }
 }

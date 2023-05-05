@@ -50,17 +50,16 @@ public class AdminController {
         return R.success(admin);
     }
 
-    @GetMapping("/page")
-    public PageInfo<Customer> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
+    @PostMapping("/page")
+    public List<Customer> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
 
         PageHelper.startPage(pageNum, 10);
         LambdaQueryWrapper<Customer> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.likeRight(StringUtils.isNotEmpty(msg), Customer::getName,msg).or().likeRight(StringUtils.isNotEmpty(msg), Customer::getPhone,msg);
         queryWrapper.orderByDesc(Customer::getUpdateTime);
         List<Customer> list = customerService.list(queryWrapper);
-        PageInfo<Customer> pageInfo = new PageInfo<>(list);
 
-        return pageInfo;
+        return list;
     }
 
 
