@@ -5,16 +5,18 @@ import com.example.be.common.R;
 import com.example.be.common.Status;
 import com.example.be.common.Type;
 import com.example.be.dto.Logindto;
+import com.example.be.dto.Userdto;
 import com.example.be.entity.Admin;
 import com.example.be.entity.Customer;
 import com.example.be.service.IAdminService;
 import com.example.be.service.ICustomerService;
 import com.example.be.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -33,16 +35,16 @@ public class LoginController {
     private IAdminService adminService;
 
     @PostMapping("/login")
-    public R<Logindto> login(HttpServletRequest request, String username, String password){
+    public R<Logindto> login(@RequestBody Userdto user){
 
 //        password = DigestUtils.md5DigestAsHex(password.getBytes());
-        log.info("请求登录{},{}",username,password);
+        log.info("请求登录{},{}",user.getUsername(),user.getPassword());
         LambdaQueryWrapper<Customer> queryWrapper1 = new LambdaQueryWrapper<>();
-        queryWrapper1.eq(Customer::getUsername,username);
+        queryWrapper1.eq(Customer::getUsername,user.getUsername());
         List<Customer> list1 = customerService.list(queryWrapper1);
 
         LambdaQueryWrapper<Admin> queryWrapper2= new LambdaQueryWrapper<>();
-        queryWrapper2.eq(Admin::getUsername,username);
+        queryWrapper2.eq(Admin::getUsername,user.getUsername());
         List<Admin> list2= adminService.list(queryWrapper2);
 
         if(list1.isEmpty() && list2.isEmpty()){
@@ -50,14 +52,14 @@ public class LoginController {
         }
         else if(!list2.isEmpty()){
             Admin admin = list2.get(0);
-            if(!admin.getPassword().equals(password)){
+            if(!admin.getPassword().equals(user.getPassword())){
                 return R.error("密码错误，登录失败");
             }
             admin.setUpdateTime(LocalDateTime.now());
             Map<String, Object> claims = new HashMap<>();
             claims.put("id", admin.getId());
-            claims.put("username", username);
-            claims.put("password", password);
+            claims.put("username", user.getUsername());
+            claims.put("password", user.getPassword());
             claims.put("type", admin.getType());
 
             String jwt = JwtUtils.generateJwt(claims);
@@ -74,14 +76,14 @@ public class LoginController {
 
         else{
             Customer customer = list1.get(0);
-            if(!customer.getPassword().equals(password)){
+            if(!customer.getPassword().equals(user.getPassword())){
                 return R.error("密码错误，登录失败");
             }
             customer.setUpdateTime(LocalDateTime.now());
             Map<String, Object> claims = new HashMap<>();
             claims.put("id", customer.getId());
-            claims.put("username", username);
-            claims.put("password", password);
+            claims.put("username", user.getUsername());
+            claims.put("password", user.getPassword());
             claims.put("type", customer.getType());
 
             String jwt = JwtUtils.generateJwt(claims);
@@ -97,20 +99,20 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public R<String> register(String username,String password){
+    public R<String> register(@RequestBody Userdto user){
 
         LambdaQueryWrapper<Customer> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Customer::getUsername,username);
+        queryWrapper.eq(Customer::getUsername,user.getUsername());
         List<Customer> list = customerService.list(queryWrapper);
         if(!list.isEmpty()){
             return R.error("该用户已存在");
         }
-        log.info("注册{}，{}",username,password);
+        log.info("注册{}，{}",user.getUsername(),user.getPassword());
         Customer customer = new Customer();
         customer.setType(Type.CUSTOMER);
-        customer.setUsername(username);
+        customer.setUsername(user.getUsername());
 //        password = DigestUtils.md5DigestAsHex(password.getBytes());
-        customer.setPassword(password);
+        customer.setPassword(user.getPassword());
         customer.setStatus(Status.RUNNING);
         customer.setAccountId(customer.getId());
         customer.setCreateTime(LocalDateTime.now());
