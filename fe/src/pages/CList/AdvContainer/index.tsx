@@ -1,6 +1,7 @@
 import { AdvCardData } from "@/type/home";
 import "./index.scss";
 import AdvCard from "@/components/advCard";
+import useGetAdvList from "@/hooks/useGetAdvList";
 
 const AdvContainer = () => {
   const advList: Array<AdvCardData> = [
@@ -14,12 +15,19 @@ const AdvContainer = () => {
       status: 11,
     },
   ];
+  const loading = false;
+
+  // const { advList, loading } = useGetAdvList();
 
   return (
     <div className="adv-container">
-      {advList.map((item, index) => {
-        return <AdvCard advCardData={item}></AdvCard>;
-      })}
+      {loading ? (
+        <div>loading...</div>
+      ) : (
+        advList?.map((item, index) => {
+          return <AdvCard advCardData={item} key={index}></AdvCard>;
+        })
+      )}
     </div>
   );
 };
