@@ -1,8 +1,10 @@
 package com.example.be.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.be.common.BaseContext;
 import com.example.be.common.R;
 import com.example.be.utils.JwtUtils;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -54,6 +56,10 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         }
 
         //6.放行。
+        Claims claims = JwtUtils.parseJwt(jwt);
+        Integer id =  claims.get("id",Integer.class);
+        BaseContext.setCurrentId(Long.valueOf(id));
+
         log.info("令牌合法, 放行");
         return true;
     }
