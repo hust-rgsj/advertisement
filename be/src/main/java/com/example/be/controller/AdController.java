@@ -2,6 +2,7 @@ package com.example.be.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.example.be.common.BaseContext;
 import com.example.be.common.R;
 import com.example.be.common.Status;
 import com.example.be.dto.Addto;
@@ -9,7 +10,9 @@ import com.example.be.entity.Ad;
 import com.example.be.service.IAdService;
 import com.example.be.utils.AliOSSUtils;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import io.micrometer.common.util.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -127,15 +130,40 @@ public class AdController {
     }
 
     @PostMapping("/page")
-    public List<Addto> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
+    public PageInfo<Addto> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
 
+        Integer customerId = Math.toIntExact(BaseContext.getCurrentId());
         PageHelper.startPage(pageNum, 6);
+
         LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Ad::getCustomerId,customerId);
         queryWrapper.likeRight(StringUtils.isNotEmpty(msg), Ad::getTitle,msg);
         queryWrapper.orderByDesc(Ad::getUpdateTime);
-        List<Ad> list = adService.list(queryWrapper);
-        List<Addto> adList = new ArrayList<>();
-        for (Ad ad : list){
+        List<Ad> listAll = adService.list(queryWrapper);
+        PageInfo<Ad> pageInfo = new PageInfo<>(listAll);
+//        List<Ad> list = new ArrayList<>();
+//        list.addAll(listAll);
+//        log.info("list:",listAll);
+        ArrayList<Addto> adList = new ArrayList<>();
+//        List<Ad> adList = new ArrayList<>();
+//        if(listAll.size() <= 6){
+//            adList.addAll(listAll);
+//        }
+//        else if (listAll.size() <= pageNum * 6){
+//            int m = (pageNum - 1) * 6;
+//            for (int i = m; i < listAll.size(); i++){
+//                adList.add(listAll.get(i));
+//            }
+//        }
+//        else{
+//            int m = (pageNum - 1) * 6;
+//            int n = pageNum * 6;
+//            for (int j = m; j < n; j++){
+//                adList.add(listAll.get(j));
+//            }
+//        }
+
+        for (Ad ad : listAll){
             Addto addto = new Addto();
             addto.setId(ad.getId());
             addto.setTitle(ad.getTitle());
@@ -147,7 +175,10 @@ public class AdController {
             adList.add(addto);
         }
 
-        return adList;
+        PageInfo<Addto> pageInfodto = new PageInfo<>(adList);
+        BeanUtils.copyProperties(pageInfo,pageInfodto);
+
+        return pageInfodto;
     }
 
     @GetMapping("/adId/{adId}")

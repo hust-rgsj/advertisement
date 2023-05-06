@@ -58,4 +58,5 @@ public class Ad implements Serializable {
 
     private String reason;
 
+    private String customerId;
 }
