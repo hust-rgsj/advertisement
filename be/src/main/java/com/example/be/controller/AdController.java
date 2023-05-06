@@ -129,7 +129,7 @@ public class AdController {
         return R.success(url);
     }
 
-    @PostMapping("/page")
+    @GetMapping("/page")
     public PageInfo<Addto> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
 
         Integer customerId = Math.toIntExact(BaseContext.getCurrentId());
@@ -141,44 +141,10 @@ public class AdController {
         queryWrapper.orderByDesc(Ad::getUpdateTime);
         List<Ad> listAll = adService.list(queryWrapper);
         PageInfo<Ad> pageInfo = new PageInfo<>(listAll);
-//        List<Ad> list = new ArrayList<>();
-//        list.addAll(listAll);
-//        log.info("list:",listAll);
-        ArrayList<Addto> adList = new ArrayList<>();
-//        List<Ad> adList = new ArrayList<>();
-//        if(listAll.size() <= 6){
-//            adList.addAll(listAll);
-//        }
-//        else if (listAll.size() <= pageNum * 6){
-//            int m = (pageNum - 1) * 6;
-//            for (int i = m; i < listAll.size(); i++){
-//                adList.add(listAll.get(i));
-//            }
-//        }
-//        else{
-//            int m = (pageNum - 1) * 6;
-//            int n = pageNum * 6;
-//            for (int j = m; j < n; j++){
-//                adList.add(listAll.get(j));
-//            }
-//        }
+        List<Addto> adList = adService.ToDto(listAll);
+        PageInfo<Addto> pageInfodto = new PageInfo<>();
 
-        for (Ad ad : listAll){
-            Addto addto = new Addto();
-            addto.setId(ad.getId());
-            addto.setTitle(ad.getTitle());
-            addto.setDescription(ad.getDescription());
-            addto.setStatus(ad.getStatus());
-            addto.setUrl(ad.getUrl());
-            addto.setStartTime(ad.getStartTime());
-            addto.setEndTime(ad.getEndTime());
-            adList.add(addto);
-        }
-
-        PageInfo<Addto> pageInfodto = new PageInfo<>(adList);
-        BeanUtils.copyProperties(pageInfo,pageInfodto);
-
-        return pageInfodto;
+        return adService.copyPageInfo(adList,pageInfodto,pageInfo);
     }
 
     @GetMapping("/adId/{adId}")

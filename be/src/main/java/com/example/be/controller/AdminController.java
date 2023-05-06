@@ -50,7 +50,7 @@ public class AdminController {
         return R.success(admin);
     }
 
-    @PostMapping("/page")
+    @GetMapping("/page")
     public List<Customer> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
 
         PageHelper.startPage(pageNum, 10);
