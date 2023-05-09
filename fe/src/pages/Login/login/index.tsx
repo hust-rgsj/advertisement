@@ -7,13 +7,11 @@ import { Login } from '@/type';
 import { login, register } from '@/api';
 import { useNavigate } from 'react-router-dom';
 
-const [messageApi] = message.useMessage();
-const navigate = useNavigate();
-
 const LoginPage = (): JSX.Element => {
   const [isRegister, setIsRegister] = useState(false);
   const [isPasswdRig, setIsPasswdRig] = useState(true);
   const [isReinputRig, setIsReinputRig] = useState(false);
+  const navigate = useNavigate();
   async function onFinish(values: Login) {
     const { username, password } = values;
     if (isRegister) register({ username, password });
@@ -33,6 +31,17 @@ const LoginPage = (): JSX.Element => {
     rePasswd.current = e.target.value;
     if (rePasswd.current != passwd.current && rePasswd.current !== '') setIsPasswdRig(false);
     else setIsPasswdRig(true);
+  }
+
+  async function handlerLogin(data: Login) {
+    const res = await login(data);
+    if (res.code === 200) {
+      localStorage.setItem('token', res.data.token);
+      message.info('登录成功！');
+      navigate('/home')
+    } else {
+      message.warning(res.msg);
+    }
   }
 
   return (
@@ -90,15 +99,5 @@ const LoginPage = (): JSX.Element => {
     </div>
   );
 };
-
-async function handlerLogin(data: Login) {
-  const res = await login(data);
-  if (res.code === 200) {
-    localStorage.setItem('token', res.data.token);
-    messageApi.info('登录成功！');
-  } else {
-    messageApi.warning(res.msg);
-  }
-}
 
 export default LoginPage;

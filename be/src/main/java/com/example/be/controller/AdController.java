@@ -2,6 +2,7 @@ package com.example.be.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.example.be.common.BaseContext;
 import com.example.be.common.R;
 import com.example.be.common.Status;
 import com.example.be.dto.Addto;
@@ -9,7 +10,9 @@ import com.example.be.entity.Ad;
 import com.example.be.service.IAdService;
 import com.example.be.utils.AliOSSUtils;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import io.micrometer.common.util.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -126,28 +129,22 @@ public class AdController {
         return R.success(url);
     }
 
-    @PostMapping("/page")
-    public List<Addto> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
+    @GetMapping("/page")
+    public PageInfo<Addto> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
 
+        Integer customerId = Math.toIntExact(BaseContext.getCurrentId());
         PageHelper.startPage(pageNum, 6);
+
         LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Ad::getCustomerId,customerId);
         queryWrapper.likeRight(StringUtils.isNotEmpty(msg), Ad::getTitle,msg);
         queryWrapper.orderByDesc(Ad::getUpdateTime);
-        List<Ad> list = adService.list(queryWrapper);
-        List<Addto> adList = new ArrayList<>();
-        for (Ad ad : list){
-            Addto addto = new Addto();
-            addto.setId(ad.getId());
-            addto.setTitle(ad.getTitle());
-            addto.setDescription(ad.getDescription());
-            addto.setStatus(ad.getStatus());
-            addto.setUrl(ad.getUrl());
-            addto.setStartTime(ad.getStartTime());
-            addto.setEndTime(ad.getEndTime());
-            adList.add(addto);
-        }
+        List<Ad> listAll = adService.list(queryWrapper);
+        PageInfo<Ad> pageInfo = new PageInfo<>(listAll);
+        List<Addto> adList = adService.ToDto(listAll);
+        PageInfo<Addto> pageInfodto = new PageInfo<>();
 
-        return adList;
+        return adService.copyPageInfo(adList,pageInfodto,pageInfo);
     }
 
     @GetMapping("/adId/{adId}")
