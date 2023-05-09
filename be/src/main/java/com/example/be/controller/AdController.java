@@ -57,6 +57,8 @@ public class AdController {
         return R.success("广告信息添加成功");
     }
 
+
+
     @PostMapping("/update")
     public R<Ad> update(@RequestBody Ad ad){
 
@@ -66,6 +68,8 @@ public class AdController {
         return R.success(ad);
     }
 
+
+    
     @PostMapping("/examine")
     public R<String> examine(Integer status,String reason, Integer adId){
         Ad ad = adService.getById(adId);
