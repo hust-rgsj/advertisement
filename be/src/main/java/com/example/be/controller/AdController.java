@@ -7,6 +7,7 @@ import com.example.be.common.R;
 import com.example.be.common.Status;
 import com.example.be.dto.Addto;
 import com.example.be.entity.Ad;
+import com.example.be.exception.GlobalExceptionHandler;
 import com.example.be.service.IAdService;
 import com.example.be.utils.AliOSSUtils;
 import com.github.pagehelper.PageHelper;
@@ -43,7 +44,9 @@ public class AdController {
     @PostMapping("/add")
     public R<String> add(@RequestBody Ad ad){
         LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
-        if(queryWrapper.eq(Ad::getTitle,ad.getTitle()) != null){
+        queryWrapper.eq(Ad::getTitle,ad.getTitle());
+        List<Ad> list = adService.list(queryWrapper);
+        if(!list.isEmpty()){
             return R.error("该广告已存在");
         }
 
@@ -64,7 +67,7 @@ public class AdController {
     }
 
     @PostMapping("/examine")
-    public R<String> examine(Integer status, @RequestParam(value = "msg", required = true, defaultValue = "")String reason, Integer adId){
+    public R<String> examine(Integer status,String reason, Integer adId){
         Ad ad = adService.getById(adId);
         if(status == Status.PASS){
             ad.setStatus(status);
@@ -121,8 +124,8 @@ public class AdController {
     }
 
     @PostMapping("/upload")
-    public R<String> upload(MultipartFile file,Integer adId) throws Exception {
-        String url = aliOSSUtils.upload(file);
+    public R<String> upload(MultipartFile image,Integer adId) throws Exception {
+        String url = aliOSSUtils.upload(image);
         Ad ad = adService.getById(adId);
         ad.setUrl(url);
         adService.updateById(ad);
@@ -146,6 +149,8 @@ public class AdController {
 
         return adService.copyPageInfo(adList,pageInfodto,pageInfo);
     }
+
+
 
     @GetMapping("/adId/{adId}")
     public Ad getByAdId(@PathVariable Integer adId){

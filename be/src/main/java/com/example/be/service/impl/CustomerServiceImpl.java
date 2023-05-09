@@ -21,16 +21,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> implements ICustomerService {
 
     @Autowired
-    private CustomerMapper userMapper;
+    private CustomerMapper customerMapper;
 
     @Override
     @Transactional
     public Customer getByUsername(String username){
         LambdaQueryWrapper<Customer> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Customer::getUsername,username);
-        Customer user = getOne(queryWrapper);
+        Customer customer = getOne(queryWrapper);
 
-        return user;
+        return customer;
     }
 
 }

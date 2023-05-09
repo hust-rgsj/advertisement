@@ -3,6 +3,7 @@ package com.example.be.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.be.common.R;
+import com.example.be.common.Status;
 import com.example.be.entity.Admin;
 import com.example.be.entity.Customer;
 import com.example.be.service.IAdminService;
@@ -33,7 +34,7 @@ public class AdminController {
     private IAdminService adminService;
 
     @Autowired
-    ICustomerService customerService;
+    private ICustomerService customerService;
 
 
     @PostMapping("/logout")
@@ -50,7 +51,7 @@ public class AdminController {
         return R.success(admin);
     }
 
-    @GetMapping("/page")
+    @GetMapping("/customer/page")
     public List<Customer> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
 
         PageHelper.startPage(pageNum, 10);
@@ -62,5 +63,17 @@ public class AdminController {
         return list;
     }
 
+    @PostMapping("/customer/status")
+    public R<String> status(Integer status, Integer customerId){
+        Customer customer = customerService.getById(customerId);
+        customer.setStatus(status);
+        customerService.updateById(customer);
+        if(status == Status.BANNED){
+            return R.success("已成功禁用该账号");
+        }
+        else{
+            return R.success("已解封该账号");
+        }
+    }
 
 }

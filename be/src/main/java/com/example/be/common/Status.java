@@ -19,5 +19,5 @@ public class Status {
 
     public static final int NOT_PAID = 1000;
 
-    public static final int PAID = 1002;
+    public static final int PAID = 1001;
 }
