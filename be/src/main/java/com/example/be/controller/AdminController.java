@@ -4,8 +4,10 @@ package com.example.be.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.be.common.R;
 import com.example.be.common.Status;
+import com.example.be.entity.Ad;
 import com.example.be.entity.Admin;
 import com.example.be.entity.Customer;
+import com.example.be.service.IAdService;
 import com.example.be.service.IAdminService;
 import com.example.be.service.ICustomerService;
 import com.github.pagehelper.PageHelper;
@@ -36,6 +38,8 @@ public class AdminController {
     @Autowired
     private ICustomerService customerService;
 
+    @Autowired
+    private IAdService adService;
 
     @PostMapping("/logout")
     public R<String> logout(HttpServletRequest request){
@@ -61,6 +65,14 @@ public class AdminController {
         List<Customer> list = customerService.list(queryWrapper);
 
         return list;
+    }
+
+    @GetMapping("/ad/page")
+    public R<List<Ad>> getAdByCustomerId(Integer CustomerId){
+
+        List<Ad> adList = adService.getAdByCustomerId(CustomerId);
+
+        return R.success(adList);
     }
 
     @PostMapping("/customer/status")

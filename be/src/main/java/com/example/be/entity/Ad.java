@@ -44,8 +44,6 @@ public class Ad implements Serializable {
 
     private String title;
 
-    private String type;
-
     private String description;
 
     private String url;
@@ -58,5 +56,5 @@ public class Ad implements Serializable {
 
     private String reason;
 
-    private String customerId;
+    private Integer customerId;
 }
