@@ -10,10 +10,15 @@ interface AdvCardData {
   id: number;
   title: string;
   description: string;
-  img: string;
+  url: string;
   startTime: number | null;
   endTime: number | null;
   status: number;
 }
 
-export type { SideItem, AdvCardData };
+interface AdvList {
+  total: number;
+  list: Array<AdvCardData>;
+}
+
+export type { SideItem, AdvCardData, AdvList };

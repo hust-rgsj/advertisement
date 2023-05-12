@@ -17,8 +17,9 @@ const AdvCard = (props: AdvCardProps) => {
         <div className="adv-digest">
           <p>{advCardData.description}</p>
         </div>
+        <div className="flex-item"></div>
         <div className="adv-img">
-          <img src={advCardData.img}></img>
+          <img src={advCardData.url}></img>
         </div>
       </div>
       <div className="adv-time">

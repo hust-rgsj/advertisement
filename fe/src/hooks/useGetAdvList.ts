@@ -1,16 +1,15 @@
 import request from "@/api/axios";
-import { AdvCardData } from "@/type/home";
+import { AdvCardData, AdvList } from "@/type/home";
 import { useEffect, useState } from "react";
 
-type advList = Array<AdvCardData>;
-
 const useGetAdvList = () => {
-  const [advList, setAdvList] = useState<advList | null>(null);
+  const [advList, setAdvList] = useState<AdvList | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     request({ url: "/customer/advertisement/page", method: "get" }).then(
       (res: any) => {
+        console.log(res);
         setLoading(false);
         setAdvList(res);
       }

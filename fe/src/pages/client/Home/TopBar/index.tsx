@@ -3,8 +3,11 @@ import { Header } from "antd/es/layout/layout";
 import shoppingImg from "@assets/img/shopping.png";
 import messageImg from "@assets/img/message.png";
 import userImg from "@assets/img/user.png";
+import { useNavigate } from "react-router-dom";
 
 const TopBar = () => {
+  const navigate = useNavigate();
+
   return (
     <Header className="client-header">
       <div className="header-logo">

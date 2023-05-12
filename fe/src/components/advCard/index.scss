@@ -20,6 +20,10 @@
     display: flex;
     justify-content: space-around;
 
+    .flex-item {
+      flex: 1;
+    }
+
     .adv-digest {
       margin-right: 1rem;
 

@@ -1,14 +1,18 @@
-import axios, { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, {
+  AxiosInstance,
+  InternalAxiosRequestConfig,
+  AxiosResponse,
+} from "axios";
 
 const service: AxiosInstance = axios.create({
-  baseURL: '/api'
+  baseURL: "/api",
 });
 // 请求拦截器
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     const { headers } = config;
-    if (token && headers) headers.Authorization = `{token}`;
+    if (token && headers) headers.Authorization = `${token}`;
     return config;
   },
   (error) => {
@@ -20,4 +24,4 @@ service.interceptors.response.use((response: AxiosResponse) => {
   return response.data;
 });
 
-export default service
+export default service;

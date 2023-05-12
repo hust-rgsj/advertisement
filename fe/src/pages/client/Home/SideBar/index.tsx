@@ -13,8 +13,13 @@ const sideItem: Array<SideItem> = [
   },
   {
     key: 1,
-    label: "nav 2",
-    path: "/home/nav",
+    label: "广告展示数据",
+    path: "/home/data",
+  },
+  {
+    key: 2,
+    label: "创建广告",
+    path: "/home/create",
   },
 ];
 

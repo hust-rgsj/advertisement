@@ -2,9 +2,10 @@ import { Layout } from "antd";
 import "./index.scss";
 import { Route, Routes } from "react-router";
 import { Navigate } from "react-router";
-import CList from "../CList";
+import List from "../List";
 import TopBar from "./TopBar";
 import SideBar from "./SideBar";
+import Create from "../Create";
 
 const CHome = (): JSX.Element => {
   return (
@@ -16,7 +17,8 @@ const CHome = (): JSX.Element => {
           <div className="client-content">
             <Routes>
               <Route path="/" element={<Navigate to="list" />}></Route>
-              <Route path="/list" element={<CList />}></Route>
+              <Route path="/list" element={<List />}></Route>
+              <Route path="/create" element={<Create />}></Route>
             </Routes>
           </div>
         </Layout>
