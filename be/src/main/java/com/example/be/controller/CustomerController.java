@@ -8,9 +8,11 @@ import com.example.be.entity.Customer;
 import com.example.be.service.ICustomerService;
 
 
+import com.example.be.utils.AliOSSUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -30,6 +32,9 @@ public class CustomerController {
     @Autowired
     private ICustomerService customerService;
 
+    @Autowired
+    private AliOSSUtils aliOSSUtils;
+
     @PostMapping("/logout")
     public R<String> logout(HttpServletRequest request){
          return R.success("退出成功");
@@ -41,32 +46,19 @@ public class CustomerController {
         return R.success("注销成功");
     }
 
-    @GetMapping("/id/{id}")
-    public R<Customer> getById(@PathVariable Integer id){
-        Customer customer = customerService.getById(id);
-        if(customer != null){
-            return R.success(customer);
-        }
-
-        return R.error("该用户不存在");
-    }
-
-    @GetMapping("/username/{username}")
-    public R<Customer> getByUsername(@PathVariable String username){
-        Customer customer = customerService.getByUsername(username);
-        if(customer != null){
-            return R.success(customer);
-        }
-        return R.error("该用户不存在");
-    }
-
     @PutMapping("/update")
-    public R<Customer> update(HttpServletRequest request, @RequestBody Customer customer){
+    public R<Customer> update(@RequestBody Customer customer){
         customer.setUpdateTime(LocalDateTime.now());
         customerService.updateById(customer);
 
         return R.success(customer);
     }
 
+    @PostMapping("/upload")
+    public R<String> upload(MultipartFile image) throws Exception {
+        String url = aliOSSUtils.upload(image);
+
+        return R.success(url);
+    }
 
 }

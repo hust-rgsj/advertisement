@@ -1,15 +1,12 @@
 package com.example.be.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.math.BigDecimal;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -18,25 +15,35 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author author
- * @since 2023-04-21
+ * @since 2023-05-12
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("tb_account")
-@AllArgsConstructor
-@NoArgsConstructor
-public class Account implements Serializable {
+@TableName("tb_shoppingcart")
+public class Shoppingcart implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    /**
+     * 客户id
+     */
     private Integer customerId;
 
-    private LocalDateTime updateTime;
+    /**
+     * 广告id
+     */
+    private Integer adId;
 
-    private BigDecimal balance;
+    /**
+     * 数量
+     */
+    private Integer amount;
 
-    private Integer logId;
+    private LocalDateTime createTime;
+
+
 }
