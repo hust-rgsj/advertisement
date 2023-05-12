@@ -2,20 +2,24 @@ package com.example.be.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.example.be.common.BaseContext;
 import com.example.be.common.R;
 import com.example.be.common.Status;
+import com.example.be.dto.Addto;
 import com.example.be.entity.Ad;
 import com.example.be.entity.Admin;
 import com.example.be.entity.Customer;
 import com.example.be.service.IAdService;
 import com.example.be.service.IAdminService;
 import com.example.be.service.ICustomerService;
+import com.example.be.utils.AliOSSUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,6 +45,9 @@ public class AdminController {
     @Autowired
     private IAdService adService;
 
+    @Autowired
+    private AliOSSUtils aliOSSUtils;
+
     @PostMapping("/logout")
     public R<String> logout(HttpServletRequest request){
         return R.success("退出成功");
@@ -48,15 +55,22 @@ public class AdminController {
 
 
     @PutMapping("/update")
-    public R<Admin> update(HttpServletRequest request, @RequestBody Admin admin){
+    public R<Admin> update(@RequestBody Admin admin){
         admin.setUpdateTime(LocalDateTime.now());
         adminService.updateById(admin);
 
         return R.success(admin);
     }
 
+    @GetMapping("/customer/id/{id}")
+    public Customer getByCustomerId(@PathVariable Integer id){
+        Customer customer = customerService.getById(id);
+
+        return customer;
+    }
+
     @GetMapping("/customer/page")
-    public List<Customer> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
+    public PageInfo<Customer> pageCustomer(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
 
         PageHelper.startPage(pageNum, 10);
         LambdaQueryWrapper<Customer> queryWrapper = new LambdaQueryWrapper<>();
@@ -64,7 +78,9 @@ public class AdminController {
         queryWrapper.orderByDesc(Customer::getUpdateTime);
         List<Customer> list = customerService.list(queryWrapper);
 
-        return list;
+        PageInfo<Customer> pageInfo = new PageInfo<>(list);
+
+        return pageInfo;
     }
 
     @GetMapping("/ad/page")
@@ -86,6 +102,27 @@ public class AdminController {
         else{
             return R.success("已解封该账号");
         }
+    }
+
+    @GetMapping("/page")
+    public PageInfo<Ad> pageAd(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "title", required = true, defaultValue = "")String title,@RequestParam(value = "status", required = true, defaultValue = "10")Integer status){
+
+        PageHelper.startPage(pageNum, 6);
+
+        LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.likeRight(StringUtils.isNotEmpty(title),Ad::getTitle,title).or().likeRight(Ad::getStatus,status);
+        queryWrapper.orderByDesc(Ad::getUpdateTime);
+        List<Ad> list = adService.list(queryWrapper);
+        PageInfo<Ad> pageInfo = new PageInfo<>(list);
+
+        return pageInfo;
+    }
+
+    @PostMapping("/upload")
+    public R<String> upload(MultipartFile image) throws Exception {
+        String url = aliOSSUtils.upload(image);
+
+        return R.success(url);
     }
 
 }

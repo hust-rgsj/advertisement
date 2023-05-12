@@ -19,9 +19,9 @@ import org.springframework.stereotype.Service;
 public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> implements IAccountService {
 
     @Override
-    public Account getByUserId(Integer userId) {
-        LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper();
-        queryWrapper.eq(Account::getCustomerId, userId);
+    public Account getByUserId(Integer customerId) {
+        LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Account::getCustomerId, customerId);
         Account account = getOne(queryWrapper);
         return account;
     }

@@ -2,15 +2,9 @@ package com.example.be.controller;
 
 
 import com.example.be.common.R;
-import com.example.be.common.Status;
-import com.example.be.entity.Account;
-import com.example.be.entity.Ad;
-import com.example.be.entity.Order;
-import com.example.be.entity.Customer;
-import com.example.be.service.IAccountService;
-import com.example.be.service.IAdService;
-import com.example.be.service.IOrderService;
-import com.example.be.service.ICustomerService;
+import com.example.be.dto.Accountdto;
+import com.example.be.entity.*;
+import com.example.be.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,17 +31,15 @@ public class OrderController {
     @Autowired
     private IAccountService accountService;
 
-    @Autowired
-    private IAdService adService;
 
     @PostMapping("/submit")
     public R<String> submit(@RequestBody Order order){
         orderService.submit(order);
-        Integer userId = order.getCustomerId();
-        Customer user = customerService.getById(userId);
-        Integer adCount = user.getAdCount() + 1;
-        user.setAdCount(adCount);
-        customerService.updateById(user);
+        Integer customerId = order.getCustomerId();
+        Customer customer = customerService.getById(customerId);
+        Integer adCount = customer.getAdCount() + 1;
+        customer.setAdCount(adCount);
+        customerService.updateById(customer);
         return R.success("订单提交成功,请支付");
     }
 
@@ -58,27 +50,16 @@ public class OrderController {
     }
 
     @GetMapping("/pay")
-    public R<String> pay(Integer orderId){
-        Order order = orderService.getById(orderId);
-        Integer adId = order.getAdId();
-        Ad ad = adService.getById(adId);
-        Integer userId = order.getCustomerId();
-        Account account = accountService.getByUserId(userId);
-        BigDecimal balance = account.getBalance().subtract(order.getAmount());
-        if (balance.compareTo(new BigDecimal(0)) == -1){
-            return R.error("账户余额不足，请充值");
+    public R<Accountdto> pay(Integer orderId){
+        Accountdto accountdto = orderService.pay(orderId);
+        if (accountdto == null){
+            return R.error("余额不足，请充值");
         }
-        account.setBalance(balance);
-        String log = account.getLog() + "\n-" + order.getAmount() + "元";
-        account.setLog(log);
-        accountService.updateById(account);
-        ad.setStatus(Status.PAID);
-        adService.updateById(ad);
-        return R.success("支付成功");
+        return R.success(accountdto);
     }
 
     @GetMapping("/recharge")
-    public  R<BigDecimal> recharger(Integer accountId, BigDecimal amount){
+    public  R<BigDecimal> recharge(Integer accountId, BigDecimal amount){
         Account account = accountService.getByUserId(accountId);
         BigDecimal balance = account.getBalance().add(amount);
         account.setBalance(balance);

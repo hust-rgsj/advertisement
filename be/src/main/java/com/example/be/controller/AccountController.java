@@ -2,7 +2,10 @@ package com.example.be.controller;
 
 
 import com.example.be.common.R;
+import com.example.be.dto.Accountdto;
 import com.example.be.entity.Account;
+import com.example.be.entity.AccountLog;
+import com.example.be.service.IAccountLogService;
 import com.example.be.service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -28,16 +32,29 @@ public class AccountController {
     @Autowired
     private IAccountService accountService;
 
+    @Autowired
+    private IAccountLogService accountLogService;
+
     @PostMapping("/recharge")
-    public R<Account> recharge(BigDecimal charge, Integer userId){
-        Account account = accountService.getByUserId(userId);
+    public R<Accountdto> recharge(BigDecimal charge, Integer customerId){
+        Account account = accountService.getByUserId(customerId);
         BigDecimal balance = account.getBalance().add(charge);
         account.setBalance(balance);
-        account.setUpdateTime(LocalDateTime.now());
-        String log = account.getLog() + "\n+" + charge +"元";
-        account.setLog(log);
+        LocalDateTime time = LocalDateTime.now();
+        account.setUpdateTime(time);
         accountService.updateById(account);
-        return R.success(account);
+        AccountLog accountLog = new AccountLog();
+        accountLog.setId(account.getId());
+        accountLog.setUpdateTime(time);
+        String log = time + "充值了" + charge + "元," + "当前余额为:" + balance + "元";
+        accountLog.setLog(log);
+        accountLogService.updateById(accountLog);
+
+        Accountdto accountdto = new Accountdto();
+        accountdto.setBalance(balance);
+        List<String> list = accountLogService.getByAccountId(account.getId());
+        accountdto.setLog(list);
+        return R.success(accountdto);
     }
 
 }

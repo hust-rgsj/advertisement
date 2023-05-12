@@ -58,4 +58,6 @@ public class Customer implements Serializable {
     private String companyAddress;
 
     private String companyPhone;
+
+    private String url;
 }

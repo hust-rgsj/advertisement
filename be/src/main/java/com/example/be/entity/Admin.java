@@ -49,4 +49,6 @@ public class Admin implements Serializable {
 
     private Integer type;
 
+    private String url;
+
 }

@@ -6,8 +6,10 @@ import com.example.be.common.Status;
 import com.example.be.common.Type;
 import com.example.be.dto.Logindto;
 import com.example.be.dto.Userdto;
+import com.example.be.entity.Account;
 import com.example.be.entity.Admin;
 import com.example.be.entity.Customer;
+import com.example.be.service.IAccountService;
 import com.example.be.service.IAdminService;
 import com.example.be.service.ICustomerService;
 import com.example.be.utils.JwtUtils;
@@ -33,6 +35,9 @@ public class LoginController {
 
     @Autowired
     private IAdminService adminService;
+
+    @Autowired
+    private IAccountService accountService;
 
     @PostMapping("/login")
     public R<Logindto> login(@RequestBody Userdto user){
@@ -109,15 +114,17 @@ public class LoginController {
         }
         log.info("注册{}，{}",user.getUsername(),user.getPassword());
         Customer customer = new Customer();
+        Account account = new Account();
         customer.setType(Type.CUSTOMER);
         customer.setUsername(user.getUsername());
 //        password = DigestUtils.md5DigestAsHex(password.getBytes());
         customer.setPassword(user.getPassword());
         customer.setStatus(Status.RUNNING);
         customer.setAccountId(customer.getId());
+        account.setId(customer.getId());
         customer.setCreateTime(LocalDateTime.now());
         customer.setUpdateTime(LocalDateTime.now());
-
+        accountService.save(account);
         customerService.save(customer);
 
         return R.success("注册成功");

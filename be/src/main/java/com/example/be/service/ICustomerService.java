@@ -12,7 +12,4 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2023-04-16
  */
 public interface ICustomerService extends IService<Customer> {
-    Customer getByUsername(String username);
-
-
 }

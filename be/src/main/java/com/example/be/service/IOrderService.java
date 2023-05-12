@@ -1,5 +1,6 @@
 package com.example.be.service;
 
+import com.example.be.dto.Accountdto;
 import com.example.be.entity.Ad;
 import com.example.be.entity.Order;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -17,4 +18,6 @@ public interface IOrderService extends IService<Order> {
     void submit(Order order);
 
     Ad check(Order order);
+
+    Accountdto pay (Integer orderId);
 }
