@@ -1,7 +1,6 @@
 package com.example.be.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.be.common.R;
 import com.example.be.dto.Accountdto;
 import com.example.be.entity.Account;

@@ -1,6 +1,7 @@
 package com.example.be.controller;
 
 
+import com.example.be.common.BaseContext;
 import com.example.be.common.R;
 
 import com.example.be.entity.Customer;
@@ -41,12 +42,13 @@ public class CustomerController {
     }
 
     @PostMapping("/remove")
-    public R<String> remove(HttpServletRequest request, @RequestBody Customer customer){
-        customerService.removeById(customer);
+    public R<String> remove(HttpServletRequest request){
+        Integer customerId = Math.toIntExact(BaseContext.getCurrentId());
+        customerService.removeById(customerId);
         return R.success("注销成功");
     }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     public R<Customer> update(@RequestBody Customer customer){
         customer.setUpdateTime(LocalDateTime.now());
         customerService.updateById(customer);

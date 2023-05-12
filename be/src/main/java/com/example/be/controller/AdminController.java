@@ -2,8 +2,10 @@ package com.example.be.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.example.be.common.BaseContext;
 import com.example.be.common.R;
 import com.example.be.common.Status;
+import com.example.be.dto.Addto;
 import com.example.be.entity.Ad;
 import com.example.be.entity.Admin;
 import com.example.be.entity.Customer;
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.AbstractList;
 import java.util.List;
 
 /**
@@ -61,8 +62,15 @@ public class AdminController {
         return R.success(admin);
     }
 
+    @GetMapping("/customer/id/{id}")
+    public Customer getByCustomerId(@PathVariable Integer id){
+        Customer customer = customerService.getById(id);
+
+        return customer;
+    }
+
     @GetMapping("/customer/page")
-    public PageInfo<Customer> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
+    public PageInfo<Customer> pageCustomer(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
 
         PageHelper.startPage(pageNum, 10);
         LambdaQueryWrapper<Customer> queryWrapper = new LambdaQueryWrapper<>();
@@ -95,6 +103,21 @@ public class AdminController {
             return R.success("已解封该账号");
         }
     }
+
+    @GetMapping("/page")
+    public PageInfo<Ad> pageAd(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "title", required = true, defaultValue = "")String title,@RequestParam(value = "status", required = true, defaultValue = "10")Integer status){
+
+        PageHelper.startPage(pageNum, 6);
+
+        LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.likeRight(StringUtils.isNotEmpty(title),Ad::getTitle,title).or().likeRight(Ad::getStatus,status);
+        queryWrapper.orderByDesc(Ad::getUpdateTime);
+        List<Ad> list = adService.list(queryWrapper);
+        PageInfo<Ad> pageInfo = new PageInfo<>(list);
+
+        return pageInfo;
+    }
+
     @PostMapping("/upload")
     public R<String> upload(MultipartFile image) throws Exception {
         String url = aliOSSUtils.upload(image);

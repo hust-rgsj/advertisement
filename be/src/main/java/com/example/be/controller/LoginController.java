@@ -9,6 +9,7 @@ import com.example.be.dto.Userdto;
 import com.example.be.entity.Account;
 import com.example.be.entity.Admin;
 import com.example.be.entity.Customer;
+import com.example.be.service.IAccountService;
 import com.example.be.service.IAdminService;
 import com.example.be.service.ICustomerService;
 import com.example.be.utils.JwtUtils;
@@ -34,6 +35,9 @@ public class LoginController {
 
     @Autowired
     private IAdminService adminService;
+
+    @Autowired
+    private IAccountService accountService;
 
     @PostMapping("/login")
     public R<Logindto> login(@RequestBody Userdto user){
@@ -120,7 +124,7 @@ public class LoginController {
         account.setId(customer.getId());
         customer.setCreateTime(LocalDateTime.now());
         customer.setUpdateTime(LocalDateTime.now());
-
+        accountService.save(account);
         customerService.save(customer);
 
         return R.success("注册成功");
