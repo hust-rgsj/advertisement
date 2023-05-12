@@ -66,8 +66,6 @@ public class AdController {
         return R.success(ad);
     }
 
-
-
     @PostMapping("/examine")
     public R<String> examine(@RequestBody Ad ad){
         Ad advertisement = adService.getById(ad);
@@ -84,8 +82,6 @@ public class AdController {
         }
         return null;
     }
-
-
 
     @PostMapping("/SetTime")
     public void SetTime(LocalDateTime start, LocalDateTime end, Integer adId){
@@ -120,7 +116,7 @@ public class AdController {
     public PageInfo<Addto> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
 
         Integer customerId = Math.toIntExact(BaseContext.getCurrentId());
-        adService.updateStatus(customerId);
+        adService.updateStatusByCustomerId(customerId);
         PageHelper.startPage(pageNum, 6);
 
         LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
@@ -141,7 +137,7 @@ public class AdController {
     public Ad getByAdId(@PathVariable Integer adId){
 
         Ad ad = adService.getById(adId);
-        adService.updateStatus(ad.getCustomerId());
+        adService.updateStatusByCustomerId(ad.getCustomerId());
 
         return ad;
     }

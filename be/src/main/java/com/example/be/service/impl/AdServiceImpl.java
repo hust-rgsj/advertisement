@@ -68,7 +68,7 @@ public class AdServiceImpl extends ServiceImpl<AdMapper, Ad> implements IAdServi
     }
 
     @Override
-    public void updateStatus(Integer customerId) {
+    public void updateStatusByCustomerId(Integer customerId) {
         LocalDateTime time = LocalDateTime.now();
         LambdaQueryWrapper<Ad> queryWrapper1 = new LambdaQueryWrapper<>();
         queryWrapper1.eq(Ad::getCustomerId,customerId);
@@ -91,10 +91,28 @@ public class AdServiceImpl extends ServiceImpl<AdMapper, Ad> implements IAdServi
 
     @Override
     public List<Ad> getAdByCustomerId(Integer customerId) {
-        updateStatus(customerId);
+        updateStatusByCustomerId(customerId);
         LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Ad::getCustomerId, customerId);
         List<Ad> adList = list(queryWrapper);
         return adList;
+    }
+
+    public void updateStatus(){
+        LocalDateTime time = LocalDateTime.now();
+        LambdaQueryWrapper<Ad> queryWrapper1 = new LambdaQueryWrapper<>();
+        queryWrapper1.eq(Ad::getStatus, Status.ON).ge(Ad::getEndTime, time);
+        List<Ad> list1 = list(queryWrapper1);
+        for (Ad ad : list1) {
+            ad.setStatus(Status.OFF);
+            updateById(ad);
+        }
+        LambdaQueryWrapper<Ad> queryWrapper2 = new LambdaQueryWrapper<>();
+        queryWrapper2.eq(Ad::getStatus, Status.PAID).le(Ad::getEndTime, time).ge(Ad::getStartTime, time);
+        List<Ad> list2 = list(queryWrapper2);
+        for (Ad ad : list2) {
+            ad.setStatus(Status.ON);
+            updateById(ad);
+        }
     }
 }

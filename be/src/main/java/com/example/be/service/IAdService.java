@@ -21,7 +21,9 @@ public interface IAdService extends IService<Ad> {
 
     PageInfo<Addto> copyPageInfo(List<Addto> adList, PageInfo<Addto> pageInfodto, PageInfo<Ad> pageInfo);
 
-    void updateStatus(Integer customerId);
+    void updateStatusByCustomerId(Integer customerId);
 
     List<Ad> getAdByCustomerId(Integer customerId);
+
+    void updateStatus();
 }
