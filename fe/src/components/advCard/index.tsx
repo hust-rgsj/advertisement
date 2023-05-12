@@ -5,6 +5,11 @@ interface AdvCardProps {
   advCardData: AdvCardData;
 }
 
+const getFirstImg = (url: string) => {
+  let urlList = url ? JSON.parse(url) : [];
+  return urlList[0];
+};
+
 const AdvCard = (props: AdvCardProps) => {
   const { advCardData } = props;
 
@@ -19,7 +24,7 @@ const AdvCard = (props: AdvCardProps) => {
         </div>
         <div className="flex-item"></div>
         <div className="adv-img">
-          <img src={advCardData.url}></img>
+          <img src={getFirstImg(advCardData.url)}></img>
         </div>
       </div>
       <div className="adv-time">

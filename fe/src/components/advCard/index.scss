@@ -2,10 +2,12 @@
   position: relative;
   width: 20vw;
   margin: 1rem;
+  margin-right: 5vw;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   background-color: white;
   box-shadow: 3px 3px 15px rgba($color: #000000, $alpha: 0.2);
+  cursor: pointer;
 
   .adv-title {
     margin: 0.5rem 0;
@@ -26,9 +28,11 @@
 
     .adv-digest {
       margin-right: 1rem;
+      max-width: 12vw;
 
       & > p {
         font-size: 0.8rem;
+        word-wrap: break-word;
       }
     }
 
