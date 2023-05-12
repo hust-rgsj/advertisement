@@ -10,8 +10,14 @@ const lazyLoad = (Component: React.LazyExoticComponent<() => JSX.Element>) => {
 const Login = lazy(() => import("@/pages/Login/login"));
 const CHome = lazy(() => import("@pages/client/Home"));
 const CList = lazy(() => import("@pages/client/List"));
+const CCreate = lazy(() => import("@pages/client/Create"));
+const CDetail = lazy(() => import("@pages/client/Detail"));
 const AHome = lazy(() => import("@pages/admin/Home"));
 const AAdvList = lazy(() => import("@pages/admin/AdvList"));
+const AUsers = lazy(() => import("@/pages/admin/users"));
+const AAdvCheck = lazy(() => import("@/pages/admin/advCheck"));
+const AAdvValue = lazy(() => import("@/pages/admin/advValue"));
+const AAppManage = lazy(() => import("@/pages/admin/appManage"));
 
 const router = createBrowserRouter([
   {
