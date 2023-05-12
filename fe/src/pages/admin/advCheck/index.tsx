@@ -1,13 +1,12 @@
 import React from 'react';
 import { Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { EditAdv } from './editAdv';
+import CheckButton from './checkButton';
+
 export interface DataType {
+  id: number;
   name: string;
-  content: string;
-  url: string;
-  user: string;
-  description: string;
+  advertisement: string;
   balance: number;
 }
 
@@ -43,34 +42,22 @@ const columns: ColumnsType<DataType> = [
     align: 'center',
   },
   {
-    title: '广告金额',
-    dataIndex: 'balance',
-    align: 'center',
-  },
-  {
-    title: '广告结束时间',
-    dataIndex: 'balance',
-    align: 'center',
-  },
-  {
     width: 300,
-    title: '操作广告',
-    dataIndex: 'address',
-    render: (text, record) => {
-      return <EditAdv {...record}></EditAdv>;
-    },
+    title: '审核',
+    render: () => <CheckButton />,
     align: 'center',
   },
 ];
 const data: DataType[] = [
   {
     name: '111',
-    description: '222',
+    id: 222,
+    advertisement: '广告1',
     balance: 113,
   },
 ];
 
-const AdvList = (): JSX.Element => {
+const Users = (): JSX.Element => {
   return <Table columns={columns} dataSource={data} />;
 };
-export default AdvList;
+export default Users;

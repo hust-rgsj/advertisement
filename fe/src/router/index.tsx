@@ -10,8 +10,6 @@ const lazyLoad = (Component: React.LazyExoticComponent<() => JSX.Element>) => {
 const Login = lazy(() => import("@/pages/Login/login"));
 const CHome = lazy(() => import("@pages/client/Home"));
 const CList = lazy(() => import("@pages/client/List"));
-const CCreate = lazy(() => import("@pages/client/Create"));
-const CDetail = lazy(() => import("@pages/client/Detail"));
 const AHome = lazy(() => import("@pages/admin/Home"));
 const AAdvList = lazy(() => import("@pages/admin/AdvList"));
 
@@ -62,6 +60,22 @@ const router = createBrowserRouter([
       {
         path: "advList",
         element: lazyLoad(AAdvList),
+      },
+      {
+        path: "users",
+        element: lazyLoad(AUsers),
+      },
+      {
+        path: "advCheck",
+        element: lazyLoad(AAdvCheck),
+      },
+      {
+        path: "advValue",
+        element: lazyLoad(AAdvValue),
+      },
+      {
+        path: "appManage",
+        element: lazyLoad(AAppManage),
       },
     ],
   },

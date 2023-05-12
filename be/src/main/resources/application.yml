@@ -22,7 +22,7 @@ aliyun:
     access-key-id: LTAI5tH6HKinBooaELQiKn4R
     access-key-secret: vU2wTbDgSHLQIr52ZlLaOCCukh3WwH
     bucket-name: web-advertisement
-    endpoint: aliyun.oss.endpoint="https://oss-cn-hangzhou.aliyuncs.com"
+    endpoint: https://oss-cn-hangzhou.aliyuncs.com
 server:
   port: 9526
   address: 0.0.0.0

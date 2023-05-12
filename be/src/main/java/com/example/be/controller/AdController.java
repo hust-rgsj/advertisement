@@ -12,14 +12,12 @@ import com.example.be.utils.AliOSSUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.micrometer.common.util.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,17 +40,22 @@ public class AdController {
 
     @PostMapping("/add")
     public R<String> add(@RequestBody Ad ad){
+        Long customerId = BaseContext.getCurrentId();
         LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
-        if(queryWrapper.eq(Ad::getTitle,ad.getTitle()) != null){
+        queryWrapper.eq(Ad::getTitle,ad.getTitle());
+        List<Ad> list = adService.list(queryWrapper);
+        if(!list.isEmpty()){
             return R.error("该广告已存在");
         }
-
+        ad.setCustomerId(Math.toIntExact(customerId));
         ad.setCreateTime(LocalDateTime.now());
         ad.setStatus(Status.EXAMING);
         adService.save(ad);
 
         return R.success("广告信息添加成功");
     }
+
+
 
     @PostMapping("/update")
     public R<Ad> update(@RequestBody Ad ad){
@@ -63,21 +66,26 @@ public class AdController {
         return R.success(ad);
     }
 
+
+
     @PostMapping("/examine")
-    public R<String> examine(Integer status, @RequestParam(value = "msg", required = true, defaultValue = "")String reason, Integer adId){
-        Ad ad = adService.getById(adId);
+    public R<String> examine(@RequestBody Ad ad){
+        Ad advertisement = adService.getById(ad);
+        Integer status = ad.getStatus();
         if(status == Status.PASS){
-            ad.setStatus(status);
-            adService.updateById(ad);
+            advertisement.setStatus(status);
+            adService.updateById(advertisement);
             return R.success("审核通过");
         }
         if(status == Status.NOT_PASS){
             ad.setStatus(status);
-            adService.updateById(ad);
-            return R.success("审核不通过，原因为："+reason+",请修改");
+            adService.updateById(advertisement);
+            return R.success("审核不通过，原因为："+ad.getReason()+",请修改");
         }
         return null;
     }
+
+
 
     @PostMapping("/SetTime")
     public void SetTime(LocalDateTime start, LocalDateTime end, Integer adId){
@@ -95,37 +103,16 @@ public class AdController {
     }
 
     @GetMapping("/stop")
-    public R<String> stop(@PathVariable  Integer adId){
+    public R<String> stop(@RequestParam  Integer adId){
         Ad ad = adService.getById(adId);
         ad.setStatus(Status.STOP);
         adService.updateById(ad);
         return R.success("广告服务已终止");
     }
 
-    @GetMapping("/updateStatus")
-    public void updateStatus(@PathVariable LocalDateTime time) {
-        LambdaQueryWrapper<Ad> queryWrapper1 = new LambdaQueryWrapper<>();
-        queryWrapper1.eq(Ad::getStatus, Status.ON).ge(Ad::getEndTime, time);
-        List<Ad> list1 = adService.list(queryWrapper1);
-        for (Ad ad : list1) {
-            ad.setStatus(Status.OFF);
-            adService.updateById(ad);
-        }
-        LambdaQueryWrapper<Ad> queryWrapper2 = new LambdaQueryWrapper<>();
-        queryWrapper2.eq(Ad::getStatus, Status.PAID).le(Ad::getEndTime, time).ge(Ad::getStartTime, time);
-        List<Ad> list2 = adService.list(queryWrapper2);
-        for (Ad ad : list2) {
-            ad.setStatus(Status.ON);
-            adService.updateById(ad);
-        }
-    }
-
     @PostMapping("/upload")
-    public R<String> upload(MultipartFile file,Integer adId) throws Exception {
-        String url = aliOSSUtils.upload(file);
-        Ad ad = adService.getById(adId);
-        ad.setUrl(url);
-        adService.updateById(ad);
+    public R<String> upload(MultipartFile image) throws Exception {
+        String url = aliOSSUtils.upload(image);
         return R.success(url);
     }
 
@@ -133,6 +120,7 @@ public class AdController {
     public PageInfo<Addto> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
 
         Integer customerId = Math.toIntExact(BaseContext.getCurrentId());
+        adService.updateStatus(customerId);
         PageHelper.startPage(pageNum, 6);
 
         LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
@@ -147,9 +135,14 @@ public class AdController {
         return adService.copyPageInfo(adList,pageInfodto,pageInfo);
     }
 
+
+
     @GetMapping("/adId/{adId}")
     public Ad getByAdId(@PathVariable Integer adId){
+
         Ad ad = adService.getById(adId);
+        adService.updateStatus(ad.getCustomerId());
+
         return ad;
     }
 }

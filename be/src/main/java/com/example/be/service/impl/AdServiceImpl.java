@@ -1,6 +1,9 @@
 package com.example.be.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.be.common.R;
+import com.example.be.common.Status;
 import com.example.be.dto.Addto;
 import com.example.be.entity.Ad;
 import com.example.be.mapper.AdMapper;
@@ -8,6 +11,7 @@ import com.example.be.service.IAdService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,5 +65,36 @@ public class AdServiceImpl extends ServiceImpl<AdMapper, Ad> implements IAdServi
         pageInfodto.setNavigateLastPage(pageInfo.getNavigateLastPage());
 
         return pageInfodto;
+    }
+
+    @Override
+    public void updateStatus(Integer customerId) {
+        LocalDateTime time = LocalDateTime.now();
+        LambdaQueryWrapper<Ad> queryWrapper1 = new LambdaQueryWrapper<>();
+        queryWrapper1.eq(Ad::getCustomerId,customerId);
+        queryWrapper1.eq(Ad::getStatus, Status.ON).ge(Ad::getEndTime, time);
+        List<Ad> list1 = list(queryWrapper1);
+        for (Ad ad : list1) {
+            ad.setStatus(Status.OFF);
+            updateById(ad);
+        }
+        LambdaQueryWrapper<Ad> queryWrapper2 = new LambdaQueryWrapper<>();
+        queryWrapper2.eq(Ad::getCustomerId,customerId);
+        queryWrapper2.eq(Ad::getStatus, Status.PAID).le(Ad::getEndTime, time).ge(Ad::getStartTime, time);
+        List<Ad> list2 = list(queryWrapper2);
+        for (Ad ad : list2) {
+            ad.setStatus(Status.ON);
+            updateById(ad);
+        }
+    }
+
+
+    @Override
+    public List<Ad> getAdByCustomerId(Integer customerId) {
+        updateStatus(customerId);
+        LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Ad::getCustomerId, customerId);
+        List<Ad> adList = list(queryWrapper);
+        return adList;
     }
 }
