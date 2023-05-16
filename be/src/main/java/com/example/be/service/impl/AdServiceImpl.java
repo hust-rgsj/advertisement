@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.be.common.R;
 import com.example.be.common.Status;
+import com.example.be.dto.AdDetaildto;
 import com.example.be.dto.Addto;
 import com.example.be.entity.Ad;
 import com.example.be.mapper.AdMapper;
@@ -114,5 +115,19 @@ public class AdServiceImpl extends ServiceImpl<AdMapper, Ad> implements IAdServi
             ad.setStatus(Status.ON);
             updateById(ad);
         }
+    }
+
+    @Override
+    public AdDetaildto getDetail(Ad ad) {
+        AdDetaildto adDetaildto =new AdDetaildto();
+        adDetaildto.setDescription(ad.getDescription());
+        adDetaildto.setTitle(ad.getTitle());
+        adDetaildto.setUrl(ad.getUrl());
+        adDetaildto.setPayStatus(ad.getPayStatus());
+        adDetaildto.setArrangeStatus(ad.getArrangeStatus());
+        adDetaildto.setAuditStatus(ad.getStatus());
+        adDetaildto.setEndTime(ad.getEndTime());
+        adDetaildto.setStartTime(ad.getStartTime());
+        return adDetaildto;
     }
 }

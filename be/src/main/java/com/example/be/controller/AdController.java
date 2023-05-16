@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.be.common.BaseContext;
 import com.example.be.common.R;
 import com.example.be.common.Status;
+import com.example.be.dto.AdDetaildto;
 import com.example.be.dto.Addto;
 import com.example.be.entity.Ad;
 import com.example.be.service.IAdService;
@@ -135,10 +136,16 @@ public class AdController {
 
     @GetMapping("/adId/{adId}")
     public Ad getByAdId(@PathVariable Integer adId){
-
         Ad ad = adService.getById(adId);
         adService.updateStatusByCustomerId(ad.getCustomerId());
-
         return ad;
     }
+
+    @GetMapping("{adId}")
+    public R<AdDetaildto> AdDetail(@PathVariable Integer adId){
+        Ad ad = adService.getById(adId);
+        AdDetaildto adDetaildto = adService.getDetail(ad);
+        return R.success(adDetaildto);
+    }
+
 }

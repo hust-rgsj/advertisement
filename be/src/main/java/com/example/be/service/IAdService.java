@@ -1,6 +1,7 @@
 package com.example.be.service;
 
 import com.example.be.common.R;
+import com.example.be.dto.AdDetaildto;
 import com.example.be.dto.Addto;
 import com.example.be.entity.Ad;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -26,4 +27,6 @@ public interface IAdService extends IService<Ad> {
     List<Ad> getAdByCustomerId(Integer customerId);
 
     void updateStatus();
+
+    AdDetaildto getDetail(Ad ad);
 }

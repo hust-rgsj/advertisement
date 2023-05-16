@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Addto {
-
-    private Integer id;
+public class AdDetaildto {
     private String title;
     private String description;
-    private Integer status;
-    private String url;
+    private Integer auditStatus;
+    private Integer payStatus;
+    private Integer arrangeStatus;
+    private String  url;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 }

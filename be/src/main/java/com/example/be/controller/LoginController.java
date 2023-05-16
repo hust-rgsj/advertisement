@@ -121,11 +121,11 @@ public class LoginController {
         customer.setPassword(user.getPassword());
         customer.setStatus(Status.RUNNING);
         customer.setAccountId(customer.getId());
-        account.setId(customer.getId());
         customer.setCreateTime(LocalDateTime.now());
         customer.setUpdateTime(LocalDateTime.now());
-        accountService.save(account);
         customerService.save(customer);
+        account.setId(customer.getId());
+        accountService.save(account);
 
         return R.success("注册成功");
     }
