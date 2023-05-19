@@ -64,10 +64,10 @@ public class MessageController {
         for (Message message : messages) {
             if (message.getId() == id) {
                 messages.remove(message);
-                return "Message deleted successfully.";
+                return "消息成功删除！";
             }
         }
-        return "Message not found.";
+        return "没有找到消息";
     }
 }
 

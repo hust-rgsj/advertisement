@@ -102,6 +102,7 @@ public class DisplayController {
      * @param endTime   查询结束时间
      * @return 返回点击数据和转化率统计
      */
+    
     @GetMapping("/statistics")
     public Map<LocalDateTime, DisplayStatistics> getStatistics(
             @RequestParam LocalDateTime startTime,
