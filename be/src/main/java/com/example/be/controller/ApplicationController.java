@@ -92,8 +92,8 @@ public class ApplicationController {
     }
 
     @GetMapping("/add")
-    public R<Ad> add(@RequestParam Integer accountId, @RequestParam Integer adId){
-        Application application = applicationService.getById(accountId);
+    public R<Ad> add(@RequestParam Integer applicationId, @RequestParam Integer adId){
+        Application application = applicationService.getById(applicationId);
         Ad ad = adService.getById(adId);
         application.setUpdateTime(LocalDateTime.now());
         application.setAdId(adId);
