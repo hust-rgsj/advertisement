@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.be.common.BaseContext;
 import com.example.be.common.R;
 import com.example.be.common.Status;
-import com.example.be.dto.AdDetaildto;
 import com.example.be.dto.Addto;
 import com.example.be.entity.Ad;
 import com.example.be.service.IAdService;
@@ -62,8 +61,10 @@ public class AdController {
     public R<Ad> update(@RequestBody Ad ad){
 
         ad.setUpdateTime(LocalDateTime.now());
+        if(ad.getStatus() == Status.NOT_PASS){
+            ad.setStatus(Status.EXAMING);
+        }
         adService.updateById(ad);
-
         return R.success(ad);
     }
 
@@ -133,7 +134,7 @@ public class AdController {
     }
 
 
-
+    //返回广告全部信息
     @GetMapping("/adId/{adId}")
     public Ad getByAdId(@PathVariable Integer adId){
         Ad ad = adService.getById(adId);
@@ -141,11 +142,13 @@ public class AdController {
         return ad;
     }
 
-    @GetMapping("{adId}")
-    public R<AdDetaildto> AdDetail(@PathVariable Integer adId){
+    //返回广告详情页
+    @GetMapping("/adDetail/{adId}")
+    public R<Addto> AdDetail(@PathVariable Integer adId){
         Ad ad = adService.getById(adId);
-        AdDetaildto adDetaildto = adService.getDetail(ad);
-        return R.success(adDetaildto);
+        Addto addto = adService.getDetail(ad);
+        return R.success(addto);
     }
+
 
 }
