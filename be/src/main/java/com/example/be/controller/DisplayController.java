@@ -49,6 +49,7 @@ public class DisplayController {
         display.setDisplayCount(displayCount);
         clickCount = display.getClickCount();
         DecimalFormat df = new DecimalFormat("0.0000");
+
         String conversionRate = df.format((double)clickCount / (double)displayCount * 100) + "%";
         display.setConversionRate(conversionRate);
         displayService.updateById(display);
@@ -66,7 +67,4 @@ public class DisplayController {
         display.setConversionRate(conversionRate);
         displayService.updateById(display);
     }
-
-
-
 }
