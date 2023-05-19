@@ -6,12 +6,12 @@ public class Status {
 
     public static final int RUNNING = 1;
 
-    //广告审核状态 12 审核中 22 审核未通过 32 审核通过
+    //广告审核状态 12 审核中 22 审核通过 32 审核未通过
     public static final int EXAMING = 12;
 
-    public static final int NOT_PASS = 22;
+    public static final int PASS = 22;
 
-    public static final int PASS = 32;
+    public static final int NOT_PASS = 32;
 
     //广告支付状态 322 未支付 222 支付成功
     public static final int NOT_PAID = 322;

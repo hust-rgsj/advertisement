@@ -22,14 +22,14 @@ import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author author
  * @since 2023-04-17
  */
 @RestController
-@RequestMapping({"/customer/advertisement","/admin/advertisement"})
+@RequestMapping({"/customer/advertisement", "/admin/advertisement"})
 public class AdController {
 
     @Autowired
@@ -39,12 +39,12 @@ public class AdController {
     private AliOSSUtils aliOSSUtils;
 
     @PostMapping("/add")
-    public R<String> add(@RequestBody Ad ad){
+    public R<String> add(@RequestBody Ad ad) {
         Long customerId = BaseContext.getCurrentId();
         LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Ad::getTitle,ad.getTitle());
+        queryWrapper.eq(Ad::getTitle, ad.getTitle());
         List<Ad> list = adService.list(queryWrapper);
-        if(!list.isEmpty()){
+        if (!list.isEmpty()) {
             return R.error("该广告已存在");
         }
         ad.setCustomerId(Math.toIntExact(customerId));
@@ -56,12 +56,11 @@ public class AdController {
     }
 
 
-
     @PostMapping("/update")
-    public R<Ad> update(@RequestBody Ad ad){
+    public R<Ad> update(@RequestBody Ad ad) {
 
         ad.setUpdateTime(LocalDateTime.now());
-        if(ad.getStatus() == Status.NOT_PASS){
+        if (ad.getStatus() == Status.NOT_PASS) {
             ad.setStatus(Status.EXAMING);
         }
         adService.updateById(ad);
@@ -69,39 +68,40 @@ public class AdController {
     }
 
     @PostMapping("/examine")
-    public R<String> examine(@RequestBody Ad ad){
+    public R<String> examine(@RequestBody Ad ad) {
         Ad advertisement = adService.getById(ad);
         Integer status = ad.getStatus();
-        if(status == Status.PASS){
+        if (status == Status.PASS) {
             advertisement.setStatus(status);
             adService.updateById(advertisement);
             return R.success("审核通过");
         }
-        if(status == Status.NOT_PASS){
+        if (status == Status.NOT_PASS) {
             ad.setStatus(status);
             adService.updateById(advertisement);
-            return R.success("审核不通过，原因为："+ad.getReason()+",请修改");
+            return R.success("审核不通过，原因为：" + ad.getReason() + ",请修改");
         }
         return null;
     }
 
     @PostMapping("/SetTime")
-    public void SetTime(LocalDateTime start, LocalDateTime end, Integer adId){
+    public void SetTime(LocalDateTime start, LocalDateTime end, Integer adId) {
         Ad ad = adService.getById(adId);
         ad.setStartTime(start);
         ad.setEndTime(end);
         adService.updateById(ad);
     }
 
-    @PostMapping("/SetPrice")
-    public void SerPrice (BigDecimal price, Integer adId){
+    @PostMapping("/setPrice")
+    public R<String> SerPrice(@RequestParam BigDecimal price, @RequestParam Integer adId) {
         Ad ad = adService.getById(adId);
         ad.setPrice(price);
         adService.updateById(ad);
+        return R.success("定价成功");
     }
 
     @GetMapping("/stop")
-    public R<String> stop(@RequestParam  Integer adId){
+    public R<String> stop(@RequestParam Integer adId) {
         Ad ad = adService.getById(adId);
         ad.setStatus(Status.STOP);
         adService.updateById(ad);
@@ -115,28 +115,28 @@ public class AdController {
     }
 
     @GetMapping("/page")
-    public PageInfo<Addto> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
+    public PageInfo<Addto> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1") Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "") String msg) {
 
         Integer customerId = Math.toIntExact(BaseContext.getCurrentId());
         adService.updateStatusByCustomerId(customerId);
         PageHelper.startPage(pageNum, 6);
 
         LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Ad::getCustomerId,customerId);
-        queryWrapper.likeRight(StringUtils.isNotEmpty(msg), Ad::getTitle,msg);
+        queryWrapper.eq(Ad::getCustomerId, customerId);
+        queryWrapper.likeRight(StringUtils.isNotEmpty(msg), Ad::getTitle, msg);
         queryWrapper.orderByDesc(Ad::getUpdateTime);
         List<Ad> listAll = adService.list(queryWrapper);
         PageInfo<Ad> pageInfo = new PageInfo<>(listAll);
         List<Addto> adList = adService.ToDto(listAll);
         PageInfo<Addto> pageInfodto = new PageInfo<>();
 
-        return adService.copyPageInfo(adList,pageInfodto,pageInfo);
+        return adService.copyPageInfo(adList, pageInfodto, pageInfo);
     }
 
 
     //返回广告全部信息
     @GetMapping("/adId/{adId}")
-    public Ad getByAdId(@PathVariable Integer adId){
+    public Ad getByAdId(@PathVariable Integer adId) {
         Ad ad = adService.getById(adId);
         adService.updateStatusByCustomerId(ad.getCustomerId());
         return ad;
@@ -144,7 +144,7 @@ public class AdController {
 
     //返回广告详情页
     @GetMapping("/adDetail/{adId}")
-    public R<Addto> AdDetail(@PathVariable Integer adId){
+    public R<Addto> AdDetail(@PathVariable Integer adId) {
         Ad ad = adService.getById(adId);
         Addto addto = adService.getDetail(ad);
         return R.success(addto);
