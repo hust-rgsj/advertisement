@@ -3,17 +3,22 @@ package com.example.be.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.be.common.Status;
+import com.example.be.dto.DataRatedto;
+import com.example.be.dto.Datadto;
 import com.example.be.entity.Ad;
 import com.example.be.entity.Display;
-import com.example.be.entity.DisplayStatistics;
+import com.example.be.entity.DisplayLog;
 import com.example.be.service.IAdService;
+import com.example.be.service.IDisplayLogService;
 import com.example.be.service.IDisplayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.DecimalFormat;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,107 +40,208 @@ public class DisplayController {
 
     @Autowired
     private IDisplayService displayService;
-    //记录点击次数和展示次数
-    private Integer clickCount = 0;
-    private Integer displayCount = 0;
-    /**
-     * 开始展示广告，并更新展示数据
-     * 
-     * @param time 展示广告的时间
-     * @return 返回被展示的广告
-     */
-    @GetMapping("/start")
-    @Transactional
-    public Ad start(LocalDateTime time){
-        LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Ad::getStatus, Status.ON)
-                    .ge(Ad::getStartTime,time)
-                    .le(Ad::getEndTime,time);
-        List<Ad> list = adService.list(queryWrapper);
 
-        //获取第一个有效广告
-        Ad ad = list.get(0);
-        Integer adId = ad.getId();
+    private IDisplayLogService displayLogService;
 
-        // 更新展示次数和转化率
-        Display display = displayService.getById(adId);
-        displayCount = display.getDisplayCount() + 1;
-        display.setDisplayCount(displayCount);
-        clickCount = display.getClickCount();
-        // 计算并格式化转化率
-        DecimalFormat df = new DecimalFormat("0.0000");
-        String conversionRate = df.format((double)clickCount / (double)displayCount * 100) + "%";
-        display.setConversionRate(conversionRate);
-        // 更新展示数据
-        displayService.updateById(display);
-        return ad;
-    }
-    /**
-     * 更新广告的点击数据和转化率
-     * 
-     * @param adId 广告ID
-     */
-    @GetMapping("/update")
-    @Transactional
-    public void update(Integer adId){
-        // 根据广告ID获取对应的展示数据
-        Display display = displayService.getById(adId);
+    @GetMapping("/statistics/{adId}")
+    public List<DataRatedto> getStatistics(@PathVariable Integer adId) {
+        LocalDateTime time = LocalDateTime.now();
+        Ad ad = adService.getById(adId);
 
-        clickCount++;
-        display.setClickCount(clickCount);
+        Display display = displayService.getByAdId(adId);
+        Integer displayAll = display.getDisplayCount();
+        Integer clickAll = display.getClickCount();
+        String rateAll = display.getConversionRate();
 
-        // 计算并格式化转化率
-        DecimalFormat df = new DecimalFormat("0.0000");
-        String conversionRate = df.format((double)clickCount / (double)displayCount * 100) + "%";
-        display.setConversionRate(conversionRate);
+        if (time.minusDays(1).isBefore(ad.getStartTime())) {
+            DataRatedto day = new DataRatedto();
+            DataRatedto week = new DataRatedto();
+            DataRatedto month = new DataRatedto();
+            day.setDisplay(displayAll);
+            day.setClick(clickAll);
+            day.setRate(rateAll);
+            week.setDisplay(displayAll);
+            week.setClick(clickAll);
+            week.setRate(rateAll);
+            month.setDisplay(displayAll);
+            month.setClick(clickAll);
+            month.setRate(rateAll);
+            List<DataRatedto> list = new ArrayList<>();
+            list.add(day);
+            list.add(week);
+            list.add(month);
+            return list;
+        } else {
+            if (time.minusDays(7).isBefore(ad.getStartTime())) {
+                LambdaQueryWrapper<DisplayLog> queryWrapperDay = new LambdaQueryWrapper<>();
+                queryWrapperDay.eq(DisplayLog::getAdId, adId);
+                queryWrapperDay.eq(DisplayLog::getUpdateTime, time.minusDays(1));
+                List<DisplayLog> listDay = displayLogService.list(queryWrapperDay);
+                DisplayLog displayLogDay = listDay.get(0);
+                int displayDay = displayAll - displayLogDay.getDisplayCount();
+                int clickDay = clickAll - displayLogDay.getClickCount();
+                DecimalFormat df = new DecimalFormat("0.0000");
+                String rateDay = df.format((double) clickDay / (double) displayDay * 100) + "%";
 
-        // 更新展示数据
-        displayService.updateById(display);
-    }
+                DataRatedto day = new DataRatedto();
+                DataRatedto week = new DataRatedto();
+                DataRatedto month = new DataRatedto();
+                day.setDisplay(displayDay);
+                day.setClick(clickDay);
+                day.setRate(rateDay);
+                week.setDisplay(displayAll);
+                week.setClick(clickAll);
+                week.setRate(rateAll);
+                month.setDisplay(displayAll);
+                month.setClick(clickAll);
+                month.setRate(rateAll);
+                List<DataRatedto> list = new ArrayList<>();
+                list.add(day);
+                list.add(week);
+                list.add(month);
+                return list;
+            } else {
+                if (time.minusMonths(1).isBefore(ad.getStartTime())) {
+
+                    LambdaQueryWrapper<DisplayLog> queryWrapperDay = new LambdaQueryWrapper<>();
+                    queryWrapperDay.eq(DisplayLog::getAdId, adId);
+                    queryWrapperDay.eq(DisplayLog::getUpdateTime, time.minusDays(1));
+                    List<DisplayLog> listDay = displayLogService.list(queryWrapperDay);
+                    DisplayLog displayLogDay = listDay.get(0);
+                    int displayDay = displayAll - displayLogDay.getDisplayCount();
+                    int clickDay = clickAll - displayLogDay.getClickCount();
+                    DecimalFormat df1 = new DecimalFormat("0.0000");
+                    String rateDay = df1.format((double) clickDay / (double) displayDay * 100) + "%";
+
+                    LambdaQueryWrapper<DisplayLog> queryWrapperWeek = new LambdaQueryWrapper<>();
+                    queryWrapperWeek.eq(DisplayLog::getAdId, adId);
+                    queryWrapperWeek.eq(DisplayLog::getUpdateTime, time.minusDays(7));
+                    List<DisplayLog> displayLogWeek = displayLogService.list(queryWrapperWeek);
+                    DisplayLog listWeek = displayLogWeek.get(0);
+                    int displayWeek = displayAll - listWeek.getDisplayCount();
+                    int clickWeek = clickAll - listWeek.getClickCount();
+                    DecimalFormat df2 = new DecimalFormat("0.0000");
+                    String rateWeek = df2.format((double) clickWeek / (double) displayWeek * 100) + "%";
+
+                    DataRatedto day = new DataRatedto();
+                    DataRatedto week = new DataRatedto();
+                    DataRatedto month = new DataRatedto();
+                    day.setDisplay(displayDay);
+                    day.setClick(clickDay);
+                    day.setRate(rateDay);
+                    week.setDisplay(displayWeek);
+                    week.setClick(clickWeek);
+                    week.setRate(rateWeek);
+                    month.setDisplay(displayAll);
+                    month.setClick(clickAll);
+                    month.setRate(rateAll);
+                    List<DataRatedto> list = new ArrayList<>();
+                    list.add(day);
+                    list.add(week);
+                    list.add(month);
+
+                    return list;
+                } else {
+                    LambdaQueryWrapper<DisplayLog> queryWrapperDay = new LambdaQueryWrapper<>();
+                    queryWrapperDay.eq(DisplayLog::getAdId, adId);
+                    queryWrapperDay.eq(DisplayLog::getUpdateTime, time.minusDays(1));
+                    List<DisplayLog> listDay = displayLogService.list(queryWrapperDay);
+                    DisplayLog displayLogDay = listDay.get(0);
+                    int displayDay = displayAll - displayLogDay.getDisplayCount();
+                    int clickDay = clickAll - displayLogDay.getClickCount();
+                    DecimalFormat df1 = new DecimalFormat("0.0000");
+                    String rateDay = df1.format((double) clickDay / (double) displayDay * 100) + "%";
 
 
-    /**
-     * 按时间查看点击数据和转化率
-     * 返回指定时间范围内的点击数据和转化率统计
-     *
-     * @param startTime 查询开始时间
-     * @param endTime   查询结束时间
-     * @return 返回点击数据和转化率统计
-     */
-    
-    @GetMapping("/statistics")
-    public Map<LocalDateTime, DisplayStatistics> getStatistics(
-            @RequestParam LocalDateTime startTime,
-            @RequestParam LocalDateTime endTime) {
-        Map<LocalDateTime, DisplayStatistics> statisticsMap = new LinkedHashMap<>();
+                    LambdaQueryWrapper<DisplayLog> queryWrapperWeek = new LambdaQueryWrapper<>();
+                    queryWrapperWeek.eq(DisplayLog::getAdId, adId);
+                    queryWrapperWeek.eq(DisplayLog::getUpdateTime, time.minusDays(7));
+                    List<DisplayLog> listWeek = displayLogService.list(queryWrapperWeek);
+                    DisplayLog displayLogWeek = listWeek.get(0);
+                    int displayWeek = displayAll - displayLogWeek.getDisplayCount();
+                    int clickWeek = clickAll - displayLogWeek.getClickCount();
+                    DecimalFormat df2 = new DecimalFormat("0.0000");
+                    String rateWeek = df2.format((double) clickWeek / (double) displayWeek * 100) + "%";
 
-        LocalDateTime current = startTime;
-        while (!current.isAfter(endTime)) {
-            // 构建查询条件
-            LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(Ad::getStatus, Status.ON)
-                    .ge(Ad::getStartTime, current)
-                    .le(Ad::getEndTime, current);
+                    LambdaQueryWrapper<DisplayLog> queryWrapperMonth = new LambdaQueryWrapper<>();
+                    queryWrapperMonth.eq(DisplayLog::getAdId, adId);
+                    queryWrapperMonth.eq(DisplayLog::getUpdateTime, time.minusDays(7));
+                    List<DisplayLog> listMonth = displayLogService.list(queryWrapperMonth);
+                    DisplayLog displayLogMonth = listMonth.get(0);
+                    Integer displayMonth = displayAll - displayLogMonth.getDisplayCount();
+                    Integer clickMonth = clickAll - displayLogMonth.getClickCount();
+                    DecimalFormat df3 = new DecimalFormat("0.0000");
+                    String rateMonth = df3.format((double) clickWeek / (double) displayWeek * 100) + "%";
 
-            // 查询符合条件的广告列表
-            List<Ad> list = adService.list(queryWrapper);
+                    DataRatedto day = new DataRatedto();
+                    DataRatedto week = new DataRatedto();
+                    DataRatedto month = new DataRatedto();
+                    day.setDisplay(displayDay);
+                    day.setClick(clickDay);
+                    day.setRate(rateDay);
+                    week.setDisplay(displayWeek);
+                    week.setClick(clickWeek);
+                    week.setRate(rateWeek);
+                    month.setDisplay(displayMonth);
+                    month.setClick(clickMonth);
+                    month.setRate(rateMonth);
+                    List<DataRatedto> list = new ArrayList<>();
+                    list.add(day);
+                    list.add(week);
+                    list.add(month);
 
-            // 遍历广告列表，获取点击数据和转化率
-            for (Ad ad : list) {
-                Display display = displayService.getById(ad.getId());
-                DisplayStatistics statistics = new DisplayStatistics();
-                statistics.setClickCount(display.getClickCount());
-                statistics.setDisplayCount(display.getDisplayCount());
-                statistics.setConversionRate(display.getConversionRate());
-                statisticsMap.put(current, statistics);
+                    return list;
+                }
             }
-
-            // 增加一天的时间间隔
-            current = current.plusDays(1);
         }
-
-        return statisticsMap;
     }
 
+        @GetMapping("/PerHourStastics/{adId}")
+        public List<Datadto> getPerHourStastics (@PathVariable Integer adId){
 
+            LocalDateTime time = LocalDateTime.now();
+            Ad ad = adService.getById(adId);
+            Duration dur = Duration.between(time, ad.getStartTime());
+            List<Datadto> list = new ArrayList<>();
+            int displayPerHour = 0;
+            int clickPerHour = 0;
+
+            if (dur.toHours() >= 12) {
+                for (int i = 0; i < 12; i++) {
+                    LambdaQueryWrapper<DisplayLog> queryWrapperPerHour = new LambdaQueryWrapper<>();
+                    queryWrapperPerHour.eq(DisplayLog::getAdId, adId);
+                    queryWrapperPerHour.eq(DisplayLog::getUpdateTime, time.minusHours(12).plusHours(i));
+                    List<DisplayLog> listPerHour = displayLogService.list(queryWrapperPerHour);
+                    DisplayLog displayLogPerHour = listPerHour.get(0);
+                    displayPerHour = displayLogPerHour.getDisplayCount() - displayPerHour;
+                    clickPerHour = displayLogPerHour.getClickCount() - clickPerHour;
+
+                    Datadto hour = new Datadto();
+
+                    hour.setDisplay(displayPerHour);
+                    hour.setClick(clickPerHour);
+
+                    list.add(hour);
+                }
+                return list;
+            } else {
+                for (int i = 0; i < dur.toHours(); i++) {
+                    LambdaQueryWrapper<DisplayLog> queryWrapperPerHour = new LambdaQueryWrapper<>();
+                    queryWrapperPerHour.eq(DisplayLog::getAdId, adId);
+                    queryWrapperPerHour.eq(DisplayLog::getUpdateTime, time.minusDays(dur.toHours()).plusHours(i));
+                    List<DisplayLog> listPerHour = displayLogService.list(queryWrapperPerHour);
+                    DisplayLog displayLogPerHour = listPerHour.get(0);
+                    displayPerHour = displayLogPerHour.getDisplayCount() - displayPerHour;
+                    clickPerHour = displayLogPerHour.getClickCount() - clickPerHour;
+
+                    Datadto hour = new Datadto();
+
+                    hour.setDisplay(displayPerHour);
+                    hour.setClick(clickPerHour);
+
+                    list.add(hour);
+                }
+                return list;
+            }
+        }
 }

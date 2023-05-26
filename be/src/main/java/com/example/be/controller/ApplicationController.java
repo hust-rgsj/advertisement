@@ -14,13 +14,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -104,6 +101,33 @@ public class ApplicationController {
         return R.success(ad);
     }
 
+    @PostMapping("/flush")
+    public R<List<Addto>> flush(@RequestParam  Integer[] adIds){
+            List<Addto> result = new ArrayList<>();
 
-
+        for(Integer adId : adIds) {
+            Ad ad = adService.getById(adId);
+            if (ad.getEndTime().isAfter(LocalDateTime.now())) {
+                ad.setStatus(Status.OFF);
+                ad.setUpdateTime(LocalDateTime.now());
+                adService.updateById(ad);
+                LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
+                queryWrapper.eq(Ad::getStatus, Status.ON);
+                List<Ad> list = adService.list(queryWrapper);
+                List<Addto> addto = adService.ToDto(list);
+                result.add(addto.get(0));
+            } else {
+                Addto addto = new Addto();
+                addto.setId(ad.getId());
+                addto.setTitle(ad.getTitle());
+                addto.setDescription(ad.getDescription());
+                addto.setStatus(ad.getStatus());
+                addto.setUrl(ad.getUrl());
+                addto.setStartTime(ad.getStartTime());
+                addto.setEndTime(ad.getEndTime());
+                result.add(addto);
+            }
+        }
+        return R.success(result);
+    }
 }
