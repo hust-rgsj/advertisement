@@ -16,7 +16,7 @@ import java.util.List;
  * @since 2023-04-19
  */
 @RestController
-@RequestMapping("/admin/messages")
+@RequestMapping("/customer/messages")
 public class MessageController {
     private List<Message> messages = new ArrayList<>();
 
@@ -70,3 +70,4 @@ public class MessageController {
         return "Message not found.";
     }
 }
+

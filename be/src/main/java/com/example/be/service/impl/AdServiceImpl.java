@@ -118,6 +118,8 @@ public class AdServiceImpl extends ServiceImpl<AdMapper, Ad> implements IAdServi
     @Override
     public Addto getDetail(Ad ad) {
         Addto addto =new Addto();
+        addto.setId(addto.getId());
+        addto.setStatus(ad.getStatus());
         addto.setDescription(ad.getDescription());
         addto.setTitle(ad.getTitle());
         addto.setUrl(ad.getUrl());

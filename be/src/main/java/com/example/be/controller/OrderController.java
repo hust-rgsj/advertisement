@@ -20,21 +20,18 @@ import java.math.BigDecimal;
  * @since 2023-04-19
  */
 @RestController
-@RequestMapping("/advertisement/order")
+@RequestMapping("/customer/advertisement/order")
 public class OrderController {
 
     @Autowired
     private IOrderService orderService;
 
-
-
-
     @PostMapping("/submit")
-    public R<Integer> submit(@RequestBody Order order){
+    public R<String> submit(@RequestBody Order order){
         Integer customerId = Math.toIntExact(BaseContext.getCurrentId());
         orderService.submit(order,customerId);
 
-        return R.success(order.getAdId());
+        return R.success("订单id为：" + order.getId());
     }
 
     @GetMapping("/check")

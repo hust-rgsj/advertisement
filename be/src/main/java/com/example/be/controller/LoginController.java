@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -127,6 +128,7 @@ public class LoginController {
         customer.setUpdateTime(LocalDateTime.now());
         customerService.save(customer);
         account.setId(customer.getId());
+        account.setBalance(BigDecimal.valueOf(0));
         accountService.save(account);
 
         return R.success("注册成功");

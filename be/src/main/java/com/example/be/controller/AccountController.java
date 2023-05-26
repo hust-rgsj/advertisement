@@ -55,8 +55,7 @@ public class AccountController {
 
         Accountdto accountdto = new Accountdto();
         accountdto.setBalance(balance);
-        List<String> list = accountLogService.getByAccountId(account.getId());
-        accountdto.setLog(list);
+        accountdto.setLog(log);
         return R.success(accountdto);
     }
 

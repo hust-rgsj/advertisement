@@ -69,15 +69,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         BigDecimal amount = order.getAmount();
         BigDecimal balance = account.getBalance().subtract(amount);
         if (balance.compareTo(new BigDecimal(0)) < 0){
-            return null;
+            Accountdto accountdto = new Accountdto();
+            accountdto.setBalance(balance);
+            String log = "余额不足，请充值";
+            accountdto.setLog(log);
+            return accountdto;
         }
         LocalDateTime time = LocalDateTime.now();
         account.setUpdateTime(time);
         account.setBalance(balance);
-        accountService.updateById(account);
+        accountService.save(account);
 
         AccountLog accountLog = new AccountLog();
-        accountLog.setId(account.getId());
+        accountLog.setAccountId(account.getId());
         accountLog.setUpdateTime(time);
         String log = time + "支付了" +amount + "元," + "当前余额为:" + balance + "元";
         accountLog.setLog(log);
@@ -85,8 +89,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         Accountdto accountdto = new Accountdto();
         accountdto.setBalance(balance);
-        List<String> list = accountLogService.getByAccountId(account.getId());
-        accountdto.setLog(list);
+        accountdto.setLog(log);
 
         ad.setStatus(Status.PAID);
         adService.updateById(ad);

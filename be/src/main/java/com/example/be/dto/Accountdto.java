@@ -13,5 +13,5 @@ import java.util.List;
 public class Accountdto {
     private BigDecimal balance;
 
-    private List<String> log;
+    private String log;
 }
