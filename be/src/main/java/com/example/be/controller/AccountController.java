@@ -9,11 +9,7 @@ import com.example.be.entity.AccountLog;
 import com.example.be.service.IAccountLogService;
 import com.example.be.service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -38,7 +34,7 @@ public class AccountController {
     private IAccountLogService accountLogService;
 
     @PostMapping("/recharge")
-    public R<Accountdto> recharge(@RequestParam  BigDecimal charge){
+    public R<Accountdto> recharge(@RequestParam BigDecimal charge){
         Integer customerId = Math.toIntExact(BaseContext.getCurrentId());
         Account account = accountService.getByUserId(customerId);
         BigDecimal balance = account.getBalance().add(charge);

@@ -37,6 +37,4 @@ public class Account implements Serializable {
     private LocalDateTime updateTime;
 
     private BigDecimal balance;
-
-    private Integer logId;
 }

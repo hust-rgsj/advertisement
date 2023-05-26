@@ -95,11 +95,10 @@ public class AdminController {
     }
 
     @PostMapping("/customer/status")
-    public R<String> status(Integer status, Integer customerId){
-        Customer customer = customerService.getById(customerId);
-        customer.setStatus(status);
+    public R<String> status(@RequestBody Customer customer){
+
         customerService.updateById(customer);
-        if(status == Status.BANNED){
+        if(customer.getStatus() == Status.BANNED){
             return R.success("已成功禁用该账号");
         }
         else{

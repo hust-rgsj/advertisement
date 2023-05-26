@@ -116,7 +116,6 @@ public class LoginController {
         }
         log.info("注册{}，{}",user.getUsername(),user.getPassword());
         Customer customer = new Customer();
-        Account account = new Account();
         customer.setType(Type.CUSTOMER);
         customer.setUsername(user.getUsername());
 //        password = DigestUtils.md5DigestAsHex(password.getBytes());
@@ -127,7 +126,8 @@ public class LoginController {
         customer.setCreateTime(LocalDateTime.now());
         customer.setUpdateTime(LocalDateTime.now());
         customerService.save(customer);
-        account.setId(customer.getId());
+        Account account = new Account();
+        account.setCustomerId(customer.getId());
         account.setBalance(BigDecimal.valueOf(0));
         accountService.save(account);
 

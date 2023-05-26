@@ -27,11 +27,11 @@ public class OrderController {
     private IOrderService orderService;
 
     @PostMapping("/submit")
-    public R<String> submit(@RequestBody Order order){
+    public R<String> submit(Integer adId){
         Integer customerId = Math.toIntExact(BaseContext.getCurrentId());
-        orderService.submit(order,customerId);
+        Integer orderId = orderService.submit(adId,customerId);
 
-        return R.success("订单id为：" + order.getId());
+        return R.success("订单id为：" + orderId);
     }
 
     @GetMapping("/check")
@@ -43,9 +43,7 @@ public class OrderController {
     @GetMapping("/pay")
     public R<Accountdto> pay(Integer orderId){
         Accountdto accountdto = orderService.pay(orderId);
-        if (accountdto == null){
-            return R.error("余额不足，请充值");
-        }
+
         return R.success(accountdto);
     }
 

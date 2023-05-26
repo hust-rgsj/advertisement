@@ -39,9 +39,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private ICustomerService customerService;
 
     @Override
-    public void submit(Order order,Integer customerId) {
+    public Integer submit(Integer adId,Integer customerId) {
         Customer customer = customerService.getById(customerId);
-        Integer adId = order.getAdId();
+        Order order = new Order();
+        order.setAdId(adId);
         Ad ad = adService.getById(adId);
         ad.setStatus(Status.NOT_PAID);
         adService.updateById(ad);
@@ -50,6 +51,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setPayTime(LocalDateTime.now());
         customerService.updateById(customer);
         this.save(order);
+
+        return order.getId();
     }
 
     @Override
@@ -78,14 +81,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         LocalDateTime time = LocalDateTime.now();
         account.setUpdateTime(time);
         account.setBalance(balance);
-        accountService.save(account);
+        accountService.updateById(account);
 
         AccountLog accountLog = new AccountLog();
         accountLog.setAccountId(account.getId());
         accountLog.setUpdateTime(time);
         String log = time + "支付了" +amount + "元," + "当前余额为:" + balance + "元";
         accountLog.setLog(log);
-        accountLogService.updateById(accountLog);
+        accountLogService.save(accountLog);
 
         Accountdto accountdto = new Accountdto();
         accountdto.setBalance(balance);
