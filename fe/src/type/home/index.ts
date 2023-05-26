@@ -21,4 +21,13 @@ interface AdvList {
   list: Array<AdvCardData>;
 }
 
-export type { SideItem, AdvCardData, AdvList };
+interface Adv {
+  title: string;
+  description: string;
+  url: string;
+  status: number;
+  startTime: string | null;
+  endTime: string | null;
+}
+
+export type { SideItem, AdvCardData, AdvList, Adv };

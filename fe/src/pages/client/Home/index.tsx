@@ -6,6 +6,8 @@ import List from "../List";
 import TopBar from "./TopBar";
 import SideBar from "./SideBar";
 import Create from "../Create";
+import Detail from "../Detail";
+import Charge from "../Charge";
 
 const CHome = (): JSX.Element => {
   return (
@@ -19,6 +21,8 @@ const CHome = (): JSX.Element => {
               <Route path="/" element={<Navigate to="list" />}></Route>
               <Route path="/list" element={<List />}></Route>
               <Route path="/create" element={<Create />}></Route>
+              <Route path="/detail" element={<Detail />}></Route>
+              <Route path="/charge" element={<Charge />}></Route>
             </Routes>
           </div>
         </Layout>

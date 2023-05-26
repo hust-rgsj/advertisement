@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import "./index.scss";
 import { AdvCardData } from "@/type/home";
 
@@ -12,9 +13,14 @@ const getFirstImg = (url: string) => {
 
 const AdvCard = (props: AdvCardProps) => {
   const { advCardData } = props;
+  const navigate = useNavigate();
+
+  const clickHandler = () => {
+    navigate(`../detail?id=${advCardData.id}`);
+  };
 
   return (
-    <div className="adv-card">
+    <div className="adv-card" onClick={clickHandler}>
       <div className="adv-title">
         <p className="adv-title">{advCardData.title}</p>
       </div>

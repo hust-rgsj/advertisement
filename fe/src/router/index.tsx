@@ -12,6 +12,7 @@ const CHome = lazy(() => import("@pages/client/Home"));
 const CList = lazy(() => import("@pages/client/List"));
 const CCreate = lazy(() => import("@pages/client/Create"));
 const CDetail = lazy(() => import("@pages/client/Detail"));
+const CCharge = lazy(() => import("@pages/client/Charge"));
 const AHome = lazy(() => import("@pages/admin/Home"));
 const AAdvList = lazy(() => import("@pages/admin/AdvList"));
 const AUsers = lazy(() => import("@/pages/admin/users"));
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
       {
         path: "detail",
         element: lazyLoad(CDetail),
+      },
+      {
+        path: "charge",
+        element: lazyLoad(CCharge),
       },
     ],
   },

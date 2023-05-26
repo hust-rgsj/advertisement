@@ -1,0 +1,29 @@
+.charge {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 16px;
+
+  .charge-container {
+    position: relative;
+    top: 10vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .charge-input {
+    width: 20vw;
+  }
+
+  .charge-btn {
+    position: relative;
+    width: 64px;
+    margin-left: 24px;
+  }
+}
+
+.hidden {
+  display: none;
+}

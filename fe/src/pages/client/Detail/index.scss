@@ -1,0 +1,58 @@
+.adv-detail {
+  position: relative;
+  padding: 16px 32px;
+
+  .title {
+    font-size: 28px;
+  }
+
+  .adv-img-title {
+    font-size: 18px;
+    margin-top: 32px;
+  }
+
+  .adv-img {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+
+    & > div {
+      margin-right: 24px;
+    }
+  }
+
+  .adv-bar {
+    position: relative;
+    margin-top: 48px;
+  }
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+
+  .panel-icon {
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    margin-right: 12px;
+    padding: 4px;
+    background-color: #dddddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.active {
+      background-color: #00c1de;
+
+      & > p {
+        font-size: 14px;
+        color: white;
+      }
+    }
+
+    & > p {
+      font-size: 14px;
+    }
+  }
+}

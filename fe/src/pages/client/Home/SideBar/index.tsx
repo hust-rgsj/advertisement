@@ -21,6 +21,11 @@ const sideItem: Array<SideItem> = [
     label: "创建广告",
     path: "/home/create",
   },
+  {
+    key: 3,
+    label: "充值",
+    path: "/home/charge",
+  },
 ];
 
 const SideBar = () => {
