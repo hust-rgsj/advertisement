@@ -120,7 +120,6 @@ public class AdServiceImpl extends ServiceImpl<AdMapper, Ad> implements IAdServi
         Addto addto =new Addto();
         addto.setDescription(ad.getDescription());
         addto.setTitle(ad.getTitle());
-        addto.setStatus(ad.getStatus());
         addto.setUrl(ad.getUrl());
         addto.setEndTime(ad.getEndTime());
         addto.setStartTime(ad.getStartTime());

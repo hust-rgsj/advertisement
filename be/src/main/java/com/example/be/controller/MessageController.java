@@ -37,11 +37,10 @@ public class MessageController {
         return null;
     }
 
-    // 发送消息给用户
-    @PostMapping("/send/{userId}")
-    public Message sendMessageToUser(@PathVariable int userId, @RequestBody Message message) {
-        message.setId(messages.size() + 1);
-        message.setRecipientId(userId);
+    // 创建新消息
+    @PostMapping
+    public Message createMessage(@RequestBody Message message) {
+        message.setId((messages.size() + 1));
         messages.add(message);
         return message;
     }
@@ -65,9 +64,9 @@ public class MessageController {
         for (Message message : messages) {
             if (message.getId() == id) {
                 messages.remove(message);
-                return "消息成功删除！";
+                return "Message deleted successfully.";
             }
         }
-        return "没有找到消息";
+        return "Message not found.";
     }
 }
