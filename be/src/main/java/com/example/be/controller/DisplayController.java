@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -137,5 +138,59 @@ public class DisplayController {
         return statisticsMap;
     }
 
+    /**
+     * 按照广告分类查询统计信息
+     *
+     * @param category 广告分类
+     * @return 返回指定广告分类下的展示数据和转化率统计
+     */
+    @GetMapping("/statistics/category")
+    public Map<LocalDateTime, DisplayStatistics> getCategoryStatistics(@RequestParam String category) {
+        Map<LocalDateTime, DisplayStatistics> statisticsMap = new LinkedHashMap<>();
+
+        LocalDateTime current = LocalDateTime.now();
+
+        LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Ad::getStatus, Status.ON)
+                .le(Ad::getStartTime, current)
+                .ge(Ad::getEndTime, current);
+
+        List<Ad> list = adService.list(queryWrapper);
+
+        for (Ad ad : list) {
+            Display display = displayService.getById(ad.getId());
+            DisplayStatistics statistics = new DisplayStatistics();
+            statistics.setClickCount(display.getClickCount());
+            statistics.setDisplayCount(display.getDisplayCount());
+            statistics.setConversionRate(display.getConversionRate());
+            statisticsMap.put(current, statistics);
+        }
+
+        return statisticsMap;
+    }
+
+    /**
+     * 按照用户查询广告展示历史
+     *
+     * @param userId 用户ID
+     * @return 返回用户的广告展示历史记录和相关统计信息
+     */
+    @GetMapping("/history/{userId}")
+    public List<Display> getUserDisplayHistory(@PathVariable int userId) {
+        LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Ad::getStatus, Status.ON);
+
+        List<Ad> list = adService.list(queryWrapper);
+        List<Display> displayHistory = new ArrayList<>();
+
+        for (Ad ad : list) {
+            Display display = displayService.getById(ad.getId());
+            if (display.getId() == userId) {
+                displayHistory.add(display);
+            }
+        }
+
+        return displayHistory;
+    }
 
 }

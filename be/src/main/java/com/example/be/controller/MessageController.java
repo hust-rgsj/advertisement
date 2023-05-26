@@ -16,7 +16,7 @@ import java.util.List;
  * @since 2023-04-19
  */
 @RestController
-@RequestMapping("/customer/messages")
+@RequestMapping("/admin/messages")
 public class MessageController {
     private List<Message> messages = new ArrayList<>();
 
@@ -37,10 +37,11 @@ public class MessageController {
         return null;
     }
 
-    // 创建新消息
-    @PostMapping
-    public Message createMessage(@RequestBody Message message) {
+    // 发送消息给用户
+    @PostMapping("/send/{userId}")
+    public Message sendMessageToUser(@PathVariable int userId, @RequestBody Message message) {
         message.setId(messages.size() + 1);
+        message.setRecipientId(userId);
         messages.add(message);
         return message;
     }
@@ -70,4 +71,3 @@ public class MessageController {
         return "没有找到消息";
     }
 }
-

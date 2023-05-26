@@ -47,9 +47,14 @@ public class Message {
     public String getContent() {
         return content;
     }
-
+    
     public void setContent(String content) {
         this.content = content;
     }
+
+    public void setRecipientId(int userId) {
+    }
+
+
 }
 
