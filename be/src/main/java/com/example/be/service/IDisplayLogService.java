@@ -1,5 +1,6 @@
 package com.example.be.service;
 
+import com.example.be.entity.Display;
 import com.example.be.entity.DisplayLog;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,6 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2023-05-19
  */
 public interface IDisplayLogService extends IService<DisplayLog> {
+
     void displaycount(Integer adId);
 
     void clickcount(Integer adId);

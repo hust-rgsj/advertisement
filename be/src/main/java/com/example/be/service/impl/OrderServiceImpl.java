@@ -1,17 +1,12 @@
 package com.example.be.service.impl;
 
+import com.example.be.common.BaseContext;
 import com.example.be.common.R;
 import com.example.be.common.Status;
 import com.example.be.dto.Accountdto;
-import com.example.be.entity.Account;
-import com.example.be.entity.AccountLog;
-import com.example.be.entity.Ad;
-import com.example.be.entity.Order;
+import com.example.be.entity.*;
 import com.example.be.mapper.OrderMapper;
-import com.example.be.service.IAccountLogService;
-import com.example.be.service.IAccountService;
-import com.example.be.service.IAdService;
-import com.example.be.service.IOrderService;
+import com.example.be.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,14 +35,20 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Autowired
     private IAccountLogService accountLogService;
 
+    @Autowired
+    private ICustomerService customerService;
+
     @Override
-    public void submit(Order order) {
+    public void submit(Order order,Integer customerId) {
+        Customer customer = customerService.getById(customerId);
         Integer adId = order.getAdId();
         Ad ad = adService.getById(adId);
         ad.setStatus(Status.NOT_PAID);
         adService.updateById(ad);
+        order.setCustomerId(customerId);
         order.setAmount(ad.getPrice());
         order.setPayTime(LocalDateTime.now());
+        customerService.updateById(customer);
         this.save(order);
     }
 

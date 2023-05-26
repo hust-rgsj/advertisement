@@ -7,6 +7,7 @@ import com.example.be.service.IDisplayLogService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.be.service.IDisplayService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 @Service
 public class DisplayLogServiceImpl extends ServiceImpl<DisplayLogMapper, DisplayLog> implements IDisplayLogService {
 
+    @Lazy
     @Autowired
     private IDisplayService displayService;
 

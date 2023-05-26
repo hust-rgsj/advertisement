@@ -7,11 +7,14 @@ import com.example.be.common.R;
 import com.example.be.common.Status;
 import com.example.be.dto.Addto;
 import com.example.be.entity.Ad;
+import com.example.be.entity.Customer;
 import com.example.be.service.IAdService;
+import com.example.be.service.ICustomerService;
 import com.example.be.utils.AliOSSUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.micrometer.common.util.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +31,7 @@ import java.util.List;
  * @author author
  * @since 2023-04-17
  */
+@Slf4j
 @RestController
 @RequestMapping({"/customer/advertisement","/admin/advertisement"})
 public class AdController {
@@ -36,11 +40,14 @@ public class AdController {
     private IAdService adService;
 
     @Autowired
+    private ICustomerService customerService;
+
+    @Autowired
     private AliOSSUtils aliOSSUtils;
 
     @PostMapping("/add")
     public R<String> add(@RequestBody Ad ad){
-        Long customerId = BaseContext.getCurrentId();
+        Integer customerId = Math.toIntExact(BaseContext.getCurrentId());
         LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Ad::getTitle,ad.getTitle());
         List<Ad> list = adService.list(queryWrapper);
@@ -51,6 +58,9 @@ public class AdController {
         ad.setCreateTime(LocalDateTime.now());
         ad.setStatus(Status.EXAMING);
         adService.save(ad);
+        Customer customer = customerService.getById(customerId);
+        customer.setAdCount(customer.getAdCount() + 1);
+        customerService.updateById(customer);
 
         return R.success("广告信息添加成功");
     }
@@ -107,7 +117,8 @@ public class AdController {
     }
 
     @GetMapping("/page")
-    public PageInfo<Addto> page(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
+    public PageInfo<Addto> Customerpage(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
+        log.info("用户查询广告");
 
         Integer customerId = Math.toIntExact(BaseContext.getCurrentId());
         adService.updateStatusByCustomerId(customerId);

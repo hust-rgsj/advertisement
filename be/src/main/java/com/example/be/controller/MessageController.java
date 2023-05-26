@@ -40,7 +40,7 @@ public class MessageController {
     // 创建新消息
     @PostMapping
     public Message createMessage(@RequestBody Message message) {
-        message.setId(messages.size() + 1);
+        message.setId((messages.size() + 1));
         messages.add(message);
         return message;
     }

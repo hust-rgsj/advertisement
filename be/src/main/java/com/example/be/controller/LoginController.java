@@ -99,7 +99,8 @@ public class LoginController {
             Long expire = decode.getExpiration().getTime() / 1000;
 
             Logindto result = new Logindto(jwt,customer.getId(),customer.getType(),expire);
-            return R.success(result);        }
+            return R.success(result);
+        }
 
     }
 
@@ -121,6 +122,7 @@ public class LoginController {
         customer.setPassword(user.getPassword());
         customer.setStatus(Status.RUNNING);
         customer.setAccountId(customer.getId());
+        customer.setAdCount(0);
         customer.setCreateTime(LocalDateTime.now());
         customer.setUpdateTime(LocalDateTime.now());
         customerService.save(customer);

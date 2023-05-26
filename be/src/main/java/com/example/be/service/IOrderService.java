@@ -15,7 +15,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IOrderService extends IService<Order> {
 
-    void submit(Order order);
+    void submit(Order order,Integer customerId);
 
     Ad check(Order order);
 

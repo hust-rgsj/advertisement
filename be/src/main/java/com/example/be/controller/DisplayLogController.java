@@ -29,6 +29,7 @@ public class DisplayLogController {
     @Transactional
     public void display(Integer adId){
         displayLogService.displaycount(adId);
+
     }
     /**
      * 更新广告的点击数据和转化率
@@ -39,5 +40,6 @@ public class DisplayLogController {
     @Transactional
     public void click(Integer adId){
         displayLogService.clickcount(adId);
+
     }
 }
