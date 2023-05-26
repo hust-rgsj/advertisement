@@ -1,6 +1,7 @@
 package com.example.be.controller;
 
 
+import com.example.be.common.BaseContext;
 import com.example.be.common.R;
 import com.example.be.dto.Accountdto;
 import com.example.be.entity.*;
@@ -25,22 +26,12 @@ public class OrderController {
     @Autowired
     private IOrderService orderService;
 
-    @Autowired
-    private ICustomerService customerService;
-
-    @Autowired
-    private IAccountService accountService;
-
-
     @PostMapping("/submit")
     public R<String> submit(@RequestBody Order order){
-        orderService.submit(order);
-        Integer customerId = order.getCustomerId();
-        Customer customer = customerService.getById(customerId);
-        Integer adCount = customer.getAdCount() + 1;
-        customer.setAdCount(adCount);
-        customerService.updateById(customer);
-        return R.success("订单提交成功,请支付");
+        Integer customerId = Math.toIntExact(BaseContext.getCurrentId());
+        orderService.submit(order,customerId);
+
+        return R.success("订单id为：" + order.getId());
     }
 
     @GetMapping("/check")
@@ -56,14 +47,6 @@ public class OrderController {
             return R.error("余额不足，请充值");
         }
         return R.success(accountdto);
-    }
-
-    @GetMapping("/recharge")
-    public  R<BigDecimal> recharge(Integer accountId, BigDecimal amount){
-        Account account = accountService.getByUserId(accountId);
-        BigDecimal balance = account.getBalance().add(amount);
-        account.setBalance(balance);
-        return R.success(balance);
     }
 
 }

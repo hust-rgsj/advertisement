@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -99,7 +100,8 @@ public class LoginController {
             Long expire = decode.getExpiration().getTime() / 1000;
 
             Logindto result = new Logindto(jwt,customer.getId(),customer.getType(),expire);
-            return R.success(result);        }
+            return R.success(result);
+        }
 
     }
 
@@ -121,10 +123,12 @@ public class LoginController {
         customer.setPassword(user.getPassword());
         customer.setStatus(Status.RUNNING);
         customer.setAccountId(customer.getId());
+        customer.setAdCount(0);
         customer.setCreateTime(LocalDateTime.now());
         customer.setUpdateTime(LocalDateTime.now());
         customerService.save(customer);
         account.setId(customer.getId());
+        account.setBalance(BigDecimal.valueOf(0));
         accountService.save(account);
 
         return R.success("注册成功");

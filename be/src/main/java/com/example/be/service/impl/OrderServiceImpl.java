@@ -1,17 +1,12 @@
 package com.example.be.service.impl;
 
+import com.example.be.common.BaseContext;
 import com.example.be.common.R;
 import com.example.be.common.Status;
 import com.example.be.dto.Accountdto;
-import com.example.be.entity.Account;
-import com.example.be.entity.AccountLog;
-import com.example.be.entity.Ad;
-import com.example.be.entity.Order;
+import com.example.be.entity.*;
 import com.example.be.mapper.OrderMapper;
-import com.example.be.service.IAccountLogService;
-import com.example.be.service.IAccountService;
-import com.example.be.service.IAdService;
-import com.example.be.service.IOrderService;
+import com.example.be.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,14 +35,20 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Autowired
     private IAccountLogService accountLogService;
 
+    @Autowired
+    private ICustomerService customerService;
+
     @Override
-    public void submit(Order order) {
+    public void submit(Order order,Integer customerId) {
+        Customer customer = customerService.getById(customerId);
         Integer adId = order.getAdId();
         Ad ad = adService.getById(adId);
         ad.setStatus(Status.NOT_PAID);
         adService.updateById(ad);
+        order.setCustomerId(customerId);
         order.setAmount(ad.getPrice());
         order.setPayTime(LocalDateTime.now());
+        customerService.updateById(customer);
         this.save(order);
     }
 
@@ -68,15 +69,19 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         BigDecimal amount = order.getAmount();
         BigDecimal balance = account.getBalance().subtract(amount);
         if (balance.compareTo(new BigDecimal(0)) < 0){
-            return null;
+            Accountdto accountdto = new Accountdto();
+            accountdto.setBalance(balance);
+            String log = "余额不足，请充值";
+            accountdto.setLog(log);
+            return accountdto;
         }
         LocalDateTime time = LocalDateTime.now();
         account.setUpdateTime(time);
         account.setBalance(balance);
-        accountService.updateById(account);
+        accountService.save(account);
 
         AccountLog accountLog = new AccountLog();
-        accountLog.setId(account.getId());
+        accountLog.setAccountId(account.getId());
         accountLog.setUpdateTime(time);
         String log = time + "支付了" +amount + "元," + "当前余额为:" + balance + "元";
         accountLog.setLog(log);
@@ -84,8 +89,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         Accountdto accountdto = new Accountdto();
         accountdto.setBalance(balance);
-        List<String> list = accountLogService.getByAccountId(account.getId());
-        accountdto.setLog(list);
+        accountdto.setLog(log);
 
         ad.setStatus(Status.PAID);
         adService.updateById(ad);

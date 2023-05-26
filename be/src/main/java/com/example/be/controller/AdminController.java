@@ -17,6 +17,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +33,7 @@ import java.util.List;
  * @author author
  * @since 2023-04-17
  */
+@Slf4j
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -71,6 +73,7 @@ public class AdminController {
 
     @GetMapping("/customer/page")
     public PageInfo<Customer> pageCustomer(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
+        log.info("管理员查询用户信息");
 
         PageHelper.startPage(pageNum, 10);
         LambdaQueryWrapper<Customer> queryWrapper = new LambdaQueryWrapper<>();
@@ -104,13 +107,17 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/page")
-    public PageInfo<Ad> pageAd(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "title", required = true, defaultValue = "")String title,@RequestParam(value = "status", required = true, defaultValue = "10")Integer status){
+    @GetMapping("/pageAd")
+    public PageInfo<Ad> pageAd(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "title", required = true, defaultValue = "")String title,@RequestParam(value = "status", required = false)Integer status){
+        log.info("管理员查询广告");
 
         PageHelper.startPage(pageNum, 6);
 
         LambdaQueryWrapper<Ad> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.likeRight(StringUtils.isNotEmpty(title),Ad::getTitle,title).or().likeRight(Ad::getStatus,status);
+        queryWrapper.likeRight(StringUtils.isNotEmpty(title),Ad::getTitle,title);
+        if (status != null){
+            queryWrapper.likeRight(Ad::getStatus,status);
+        }
         queryWrapper.orderByDesc(Ad::getUpdateTime);
         List<Ad> list = adService.list(queryWrapper);
         PageInfo<Ad> pageInfo = new PageInfo<>(list);

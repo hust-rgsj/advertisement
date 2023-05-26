@@ -61,7 +61,4 @@ public class Ad implements Serializable {
 
     private Integer customerId;
 
-    private  Integer payStatus;
-
-    private  Integer arrangeStatus;
 }
