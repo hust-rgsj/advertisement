@@ -2,6 +2,7 @@ package com.example.be.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.example.be.common.BaseContext;
 import com.example.be.common.R;
 import com.example.be.common.Status;
@@ -62,11 +63,13 @@ public class ApplicationController {
     @GetMapping("/stop")
     public R<String> stop(@RequestParam Integer applicationId){
         Application application = applicationService.getById(applicationId);
-        application.setAdId(null);
-        application.setAdTitle(null);
-        application.setAdUrl(null);
-        application.setUpdateTime(LocalDateTime.now());
-        applicationService.updateById(application);
+        LambdaUpdateWrapper<Application> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(Application::getId,applicationId);
+        wrapper.set(Application::getAdId,null);
+        wrapper.set(Application::getAdTitle,null);
+        wrapper.set(Application::getAdUrl,null);
+        wrapper.set(Application::getUpdateTime,LocalDateTime.now());
+        applicationService.update(wrapper);
         return R.success("广告服务已在"+application.getName() +"app中被终止");
     }
 

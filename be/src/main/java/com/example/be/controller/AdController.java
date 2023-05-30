@@ -69,9 +69,10 @@ public class AdController {
 
     @PostMapping("/update")
     public R<Ad> update(@RequestBody Ad ad){
+        Ad advertisement = adService.getById(ad.getId());
         ad.setReason("");
         ad.setUpdateTime(LocalDateTime.now());
-        if(ad.getStatus() == Status.NOT_PASS){
+        if(advertisement.getStatus() == Status.NOT_PASS){
             ad.setStatus(Status.EXAMING);
         }
         adService.updateById(ad);
