@@ -44,6 +44,7 @@ public class OrderController {
     public R<Accountdto> pay(@RequestBody Order order){
         Integer orderId = order.getId();
         Accountdto accountdto = orderService.pay(orderId);
+        orderService.removeById(order);
         return R.success(accountdto);
     }
 

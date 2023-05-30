@@ -18,7 +18,7 @@ public class Message {
 
     private Integer id;
 
-    private String title;   //标签
+    private String title;
     private String content;
 
 }
