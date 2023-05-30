@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useState } from 'react';
 import { getUserList } from '@/api';
+import dayjs from 'dayjs';
 
 export interface DataType {
   id: number;
@@ -16,7 +17,7 @@ const columns: ColumnsType<DataType> = [
     title: '序号',
     dataIndex: 'index',
     align: 'center',
-    width: 60,
+    width: 100,
     render: (text, record, idx) => {
       return <span>{idx}</span>;
     },
@@ -34,14 +35,23 @@ const columns: ColumnsType<DataType> = [
   },
   {
     width: 300,
-    title: '客户广告',
+    title: '注册时间',
     dataIndex: 'advertisement',
+    align: 'center',
+    render: (text) => {
+      return <span>{dayjs(text).format('YYYY-MM-DD')}</span>;
+    },
+  },
+  {
+    width: 300,
+    title: '客户电话',
+    dataIndex: 'phone',
     align: 'center',
   },
   {
     width: 300,
-    title: '客户余额',
-    dataIndex: 'balance',
+    title: '客户电话',
+    dataIndex: 'phone',
     align: 'center',
   },
 ];
@@ -58,11 +68,16 @@ const Users = (): JSX.Element => {
   ]);
   const [totalCnt, setTotalCnt] = useState(100);
   const [tableLoading, setTableLoading] = useState(false);
+  useEffect(() => {
+    getList(1);
+  }, []);
   async function getList(pageNum: number) {
     setTableLoading(true);
     try {
       const res = await getUserList({ pageNum });
       console.log(res);
+      setTableData(res.list);
+      setTotalCnt(res.total);
       setTableLoading(false);
     } catch (err) {
       setTableLoading(false);

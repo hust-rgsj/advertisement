@@ -13,7 +13,7 @@ const columns: ColumnsType<DataType> = [
     title: '序号',
     dataIndex: 'index',
     align: 'center',
-    width: 60,
+    width: 100,
     render: (text, record, idx) => {
       return <span>{idx}</span>;
     },

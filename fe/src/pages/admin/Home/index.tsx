@@ -5,6 +5,8 @@ import { SideItem } from '@/type/home';
 import { MenuInfo } from 'rc-menu/lib/interface';
 import { Navigate, useLocation } from 'react-router';
 import { Outlet } from 'react-router-dom';
+import logo from '@/assets/img/icon_screen_Admin.png';
+import { Content } from 'antd/es/layout/layout';
 
 const { Header, Sider } = Layout;
 
@@ -44,23 +46,25 @@ const UHome = (): JSX.Element => {
   };
 
   const pathname = useLocation().pathname.slice(1).split('/');
-  console.log(pathname)
+  console.log(pathname);
   return (
-    <Layout className="client-home">
+    <Layout className="client-home" hasSider>
       <Header className="client-header">
-        <div className="logo" />
+        <div className="logo">
+          <img src={logo}></img>
+        </div>
       </Header>
       <Layout className="client-body">
         <Sider className="client-sider">
           <Menu items={sideItem} defaultSelectedKeys={['0']} onClick={siderOnClick} theme="dark"></Menu>
         </Sider>
-        <div className="client-content">
+        <Content style={{ margin: '80px 0 0 200px', overflow: 'initial' }} className="client-content">
           <Breadcrumb style={{ margin: '16px' }}>
             <Breadcrumb.Item>{pathname[0]}</Breadcrumb.Item>
             <Breadcrumb.Item>{pathname[1]}</Breadcrumb.Item>
           </Breadcrumb>
           <Outlet />
-        </div>
+        </Content>
       </Layout>
     </Layout>
   );
