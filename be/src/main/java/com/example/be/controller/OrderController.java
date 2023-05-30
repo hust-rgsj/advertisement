@@ -40,8 +40,9 @@ public class OrderController {
         return orderService.check(order);
     }
 
-    @GetMapping("/pay")
-    public R<Accountdto> pay(Integer orderId){
+    @PostMapping("/pay")
+    public R<Accountdto> pay(@RequestBody Order order){
+        Integer orderId = order.getId();
         Accountdto accountdto = orderService.pay(orderId);
 
         return R.success(accountdto);
