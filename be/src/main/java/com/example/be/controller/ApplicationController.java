@@ -88,17 +88,15 @@ public class ApplicationController {
         return adService.copyPageInfo(adList,pageInfodto,pageInfo);
     }
 
-    @GetMapping("/add")
-    public R<Ad> add(@RequestParam Integer applicationId, @RequestParam Integer adId){
-        Application application = applicationService.getById(applicationId);
+    @PostMapping("/add")
+    public R<String> add(@RequestBody Application application){
+        Integer adId = application.getAdId();
         Ad ad = adService.getById(adId);
         application.setUpdateTime(LocalDateTime.now());
-        application.setAdId(adId);
         application.setAdTitle(ad.getTitle());
         application.setAdUrl(ad.getUrl());
-        applicationService.updateById(application);
-
-        return R.success(ad);
+        applicationService.save(application);
+        return R.success("添加成功");
     }
 
     @PostMapping("/flush")

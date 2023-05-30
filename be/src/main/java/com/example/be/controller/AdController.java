@@ -69,7 +69,7 @@ public class AdController {
 
     @PostMapping("/update")
     public R<Ad> update(@RequestBody Ad ad){
-
+        ad.setReason("");
         ad.setUpdateTime(LocalDateTime.now());
         if(ad.getStatus() == Status.NOT_PASS){
             ad.setStatus(Status.EXAMING);
@@ -80,16 +80,13 @@ public class AdController {
 
     @PostMapping("/examine")
     public R<String> examine(@RequestBody Ad ad){
-        Ad advertisement = adService.getById(ad);
         Integer status = ad.getStatus();
         if(status == Status.PASS){
-            advertisement.setStatus(status);
-            adService.updateById(advertisement);
+            adService.updateById(ad);
             return R.success("审核通过");
         }
         if(status == Status.NOT_PASS){
-            ad.setStatus(status);
-            adService.updateById(advertisement);
+            adService.updateById(ad);
             return R.success("审核不通过，原因为："+ad.getReason()+",请修改");
         }
         return null;
