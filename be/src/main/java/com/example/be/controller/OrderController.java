@@ -27,10 +27,10 @@ public class OrderController {
     private IOrderService orderService;
 
     @PostMapping("/submit")
-    public R<String> submit(Integer adId){
+    public R<String> submit(@RequestBody Order order){
+        Integer adId = order.getAdId();
         Integer customerId = Math.toIntExact(BaseContext.getCurrentId());
         Integer orderId = orderService.submit(adId,customerId);
-
         return R.success("订单id为：" + orderId);
     }
 
@@ -44,7 +44,6 @@ public class OrderController {
     public R<Accountdto> pay(@RequestBody Order order){
         Integer orderId = order.getId();
         Accountdto accountdto = orderService.pay(orderId);
-
         return R.success(accountdto);
     }
 
