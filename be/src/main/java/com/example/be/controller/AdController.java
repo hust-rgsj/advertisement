@@ -68,7 +68,7 @@ public class AdController {
 
 
     @PostMapping("/update")
-    public R<Ad> update(@RequestBody Ad ad){
+    public R<String> update(@RequestBody Ad ad){
         Ad advertisement = adService.getById(ad.getId());
         ad.setReason("");
         ad.setUpdateTime(LocalDateTime.now());
@@ -76,7 +76,7 @@ public class AdController {
             ad.setStatus(Status.EXAMING);
         }
         adService.updateById(ad);
-        return R.success(ad);
+        return R.success("修改成功");
     }
 
     @PostMapping("/examine")

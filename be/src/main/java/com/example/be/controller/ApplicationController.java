@@ -63,6 +63,10 @@ public class ApplicationController {
     @GetMapping("/stop")
     public R<String> stop(@RequestParam Integer applicationId){
         Application application = applicationService.getById(applicationId);
+        Ad ad = adService.getById(application.getAdId());
+        ad.setStatus(Status.STOP);
+        adService.updateById(ad);
+
         LambdaUpdateWrapper<Application> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(Application::getId,applicationId);
         wrapper.set(Application::getAdId,null);
@@ -70,6 +74,7 @@ public class ApplicationController {
         wrapper.set(Application::getAdUrl,null);
         wrapper.set(Application::getUpdateTime,LocalDateTime.now());
         applicationService.update(wrapper);
+
         return R.success("广告服务已在"+application.getName() +"app中被终止");
     }
 

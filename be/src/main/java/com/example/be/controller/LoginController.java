@@ -123,6 +123,7 @@ public class LoginController {
         customer.setStatus(Status.RUNNING);
         customer.setAccountId(customer.getId());
         customer.setAdCount(0);
+        customer.setType(0);
         customer.setCreateTime(LocalDateTime.now());
         customer.setUpdateTime(LocalDateTime.now());
         customerService.save(customer);
