@@ -18,12 +18,12 @@ public class Status {
 
     public static final int PAID = 222;
 
-    //广告投放状态 2222 投放中 3222 投放结束 1222 强制终止投放
+    //广告投放状态 2222 投放中 3222 投放结束 1222 待投放
     public static final int ON = 2222;
 
     public static final int OFF = 3222;
 
-    public static final int STOP = 1222;
+    public static final int WAIT = 1222;
 
 
 }

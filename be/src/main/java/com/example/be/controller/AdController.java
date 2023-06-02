@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.be.common.BaseContext;
 import com.example.be.common.R;
 import com.example.be.common.Status;
+import com.example.be.dto.AdDetaildto;
 import com.example.be.dto.Addto;
 import com.example.be.entity.Ad;
 import com.example.be.entity.Customer;
@@ -103,7 +104,7 @@ public class AdController {
     @GetMapping("/stop")
     public R<String> stop(@RequestParam  Integer adId){
         Ad ad = adService.getById(adId);
-        ad.setStatus(Status.STOP);
+        ad.setStatus(Status.OFF);
         adService.updateById(ad);
         return R.success("广告服务已终止");
     }
@@ -145,10 +146,10 @@ public class AdController {
 
     //返回广告详情页
     @GetMapping("/adDetail/{adId}")
-    public R<Addto> AdDetail(@PathVariable Integer adId){
+    public R<AdDetaildto> AdDetail(@PathVariable Integer adId){
         Ad ad = adService.getById(adId);
-        Addto addto = adService.getDetail(ad);
-        return R.success(addto);
+        AdDetaildto detail = adService.getDetail(ad);
+        return R.success(detail);
     }
 
 

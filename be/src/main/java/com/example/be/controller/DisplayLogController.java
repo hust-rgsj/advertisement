@@ -1,6 +1,10 @@
 package com.example.be.controller;
 
 
+import com.example.be.entity.Ad;
+import com.example.be.entity.Application;
+import com.example.be.service.IAdService;
+import com.example.be.service.IApplicationService;
 import com.example.be.service.IDisplayLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,22 +28,39 @@ public class DisplayLogController {
     @Autowired
     private IDisplayLogService displayLogService;
 
+    @Autowired
+    private IApplicationService applicationService;
 
+    @Autowired
+    private IAdService adService;
+
+    /**
+     * 投放广告并更新广告的投放数据和转化率
+     * @param applicationId
+     * @return
+     */
     @GetMapping("/display")
     @Transactional
-    public void display(Integer adId){
+    public String display(Integer applicationId){
+        Application application = applicationService.getById(applicationId);
+        Integer adId = application.getAdId();
         displayLogService.displaycount(adId);
 
+        Ad ad = adService.getById(adId);
+        String url = ad.getUrl();
+
+        return url;
     }
     /**
      * 更新广告的点击数据和转化率
      *
-     * @param adId 广告ID
+     * @param applicationId 广告ID
      */
     @GetMapping("/click")
     @Transactional
-    public void click(Integer adId){
+    public void click(Integer applicationId){
+        Application application = applicationService.getById(applicationId);
+        Integer adId = application.getAdId();
         displayLogService.clickcount(adId);
-
     }
 }

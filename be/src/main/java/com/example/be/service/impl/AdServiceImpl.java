@@ -3,6 +3,7 @@ package com.example.be.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.be.common.Status;
+import com.example.be.dto.AdDetaildto;
 import com.example.be.dto.Addto;
 import com.example.be.entity.Ad;
 import com.example.be.mapper.AdMapper;
@@ -116,15 +117,16 @@ public class AdServiceImpl extends ServiceImpl<AdMapper, Ad> implements IAdServi
     }
 
     @Override
-    public Addto getDetail(Ad ad) {
-        Addto addto =new Addto();
-        addto.setId(addto.getId());
-        addto.setStatus(ad.getStatus());
-        addto.setDescription(ad.getDescription());
-        addto.setTitle(ad.getTitle());
-        addto.setUrl(ad.getUrl());
-        addto.setEndTime(ad.getEndTime());
-        addto.setStartTime(ad.getStartTime());
-        return addto;
+    public AdDetaildto getDetail(Ad ad) {
+        AdDetaildto detail = new AdDetaildto();
+        detail.setId(ad.getId());
+        detail.setStatus(ad.getStatus());
+        detail.setDescription(ad.getDescription());
+        detail.setTitle(ad.getTitle());
+        detail.setUrl(ad.getUrl());
+        detail.setPrice(ad.getPrice());
+        detail.setEndTime(ad.getEndTime());
+        detail.setStartTime(ad.getStartTime());
+        return detail;
     }
 }

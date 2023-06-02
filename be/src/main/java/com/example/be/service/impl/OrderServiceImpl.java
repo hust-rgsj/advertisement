@@ -94,7 +94,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         accountdto.setBalance(balance);
         accountdto.setLog(log);
 
-        ad.setStatus(Status.PAID);
+        ad.setStatus(Status.WAIT);
         adService.updateById(ad);
 
         return accountdto;

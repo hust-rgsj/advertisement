@@ -1,6 +1,7 @@
 package com.example.be.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.be.common.BaseContext;
 import com.example.be.common.R;
 import com.example.be.dto.Accountdto;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * <p>
@@ -27,11 +29,18 @@ public class OrderController {
     private IOrderService orderService;
 
     @PostMapping("/submit")
-    public R<String> submit(@RequestBody Order order){
+    public R<Integer> submit(@RequestBody Order order){
+        LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Order::getId,order.getId());
+        List<Order> list = orderService.list(queryWrapper);
+        if (list != null){
+            orderService.removeById(order);
+            orderService.updateById(order);
+        }
         Integer adId = order.getAdId();
         Integer customerId = Math.toIntExact(BaseContext.getCurrentId());
         Integer orderId = orderService.submit(adId,customerId);
-        return R.success("订单id为：" + orderId);
+        return R.success(orderId);
     }
 
     @GetMapping("/check")

@@ -64,7 +64,7 @@ public class ApplicationController {
     public R<String> stop(@RequestParam Integer applicationId){
         Application application = applicationService.getById(applicationId);
         Ad ad = adService.getById(application.getAdId());
-        ad.setStatus(Status.STOP);
+        ad.setStatus(Status.OFF);
         adService.updateById(ad);
 
         LambdaUpdateWrapper<Application> wrapper = new LambdaUpdateWrapper<>();
