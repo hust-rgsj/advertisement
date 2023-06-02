@@ -9,8 +9,10 @@ import com.example.be.common.Status;
 import com.example.be.dto.Addto;
 import com.example.be.entity.Ad;
 import com.example.be.entity.Application;
+import com.example.be.entity.Display;
 import com.example.be.service.IAdService;
 import com.example.be.service.IApplicationService;
+import com.example.be.service.IDisplayService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.micrometer.common.util.StringUtils;
@@ -38,6 +40,9 @@ public class ApplicationController {
 
     @Autowired
     private IAdService adService;
+
+    @Autowired
+    private IDisplayService displayService;
 
     @GetMapping("/pageApp")
     public PageInfo<Application> pageApp(@RequestParam(value = "pageNum", required = true, defaultValue = "1")Integer pageNum, @RequestParam(value = "msg", required = true, defaultValue = "")String msg){
@@ -99,12 +104,26 @@ public class ApplicationController {
     @PostMapping("/add")
     public R<String> add(@RequestBody Application application){
         Integer adId = application.getAdId();
-        Ad ad = adService.getById(adId);
-        application.setUpdateTime(LocalDateTime.now());
-        application.setAdTitle(ad.getTitle());
-        application.setAdUrl(ad.getUrl());
-        applicationService.save(application);
+
+        if (adId != null){
+            Ad ad = adService.getById(adId);
+            Display display = new Display();
+            display.setAdId(adId);
+            display.setDisplayCount(0);
+            display.setClickCount(0);
+            display.setConversionRate("0");
+            displayService.save(display);
+            application.setUpdateTime(LocalDateTime.now());
+            application.setAdTitle(ad.getTitle());
+            application.setAdUrl(ad.getUrl());
+            applicationService.save(application);
+        }
+        else{
+            application.setUpdateTime(LocalDateTime.now());
+            applicationService.save(application);
+        }
         return R.success("添加成功");
+
     }
 
     @PostMapping("/flush")

@@ -41,7 +41,7 @@ public class DisplayController {
 
 
     @GetMapping("/PerHourStastics/{adId}")
-    public List<Datadto> getPerHourStastics (@PathVariable Integer adId){
+    public List<Datadto> getPerHourStatistics (@PathVariable Integer adId){
 
         LocalDateTime time = LocalDateTime.now();
         List<Datadto> list = displayService.getdata(time, adId);

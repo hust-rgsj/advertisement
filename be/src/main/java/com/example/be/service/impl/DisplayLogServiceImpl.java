@@ -33,11 +33,13 @@ public class DisplayLogServiceImpl extends ServiceImpl<DisplayLogMapper, Display
     @Override
     public void displaycount(Integer adId) {
 
+        Display display = displayService.getByAdId(adId);
+
         DisplayLog displayLog = new DisplayLog();
         displayLog.setAdId(adId);
-        displayCount = displayLog.getDisplayCount() + 1;
+        displayCount = display.getDisplayCount() + 1;
         displayLog.setDisplayCount(displayCount);
-        clickCount = displayLog.getClickCount();
+        clickCount = display.getClickCount();
         // 计算并格式化转化率
         DecimalFormat df = new DecimalFormat("0.0000");
         String conversionRate = df.format((double)clickCount / (double)displayCount * 100) + "%";
@@ -48,7 +50,6 @@ public class DisplayLogServiceImpl extends ServiceImpl<DisplayLogMapper, Display
         save(displayLog);
 
         //display
-        Display display = displayService.getByAdId(adId);
         display.setDisplayCount(displayCount);
         display.setConversionRate(conversionRate);
         displayService.updateById(display);
@@ -57,11 +58,13 @@ public class DisplayLogServiceImpl extends ServiceImpl<DisplayLogMapper, Display
 
     @Override
     public void clickcount(Integer adId) {
+        Display display = displayService.getByAdId(adId);
+
         DisplayLog displayLog = new DisplayLog();
         displayLog.setAdId(adId);
-        clickCount = displayLog.getDisplayCount() + 1;
+        clickCount = display.getClickCount() + 1;
         displayLog.setClickCount(clickCount);
-        displayCount = displayLog.getDisplayCount();
+        displayCount = display.getDisplayCount();
         // 计算并格式化转化率
         DecimalFormat df = new DecimalFormat("0.0000");
         String conversionRate = df.format((double)clickCount / (double)displayCount * 100) + "%";
@@ -72,7 +75,6 @@ public class DisplayLogServiceImpl extends ServiceImpl<DisplayLogMapper, Display
         save(displayLog);
 
         //display
-        Display display = displayService.getByAdId(adId);
         display.setClickCount(clickCount);
         display.setConversionRate(conversionRate);
         displayService.updateById(display);

@@ -80,7 +80,7 @@ public class DisplayServiceImpl extends ServiceImpl<DisplayMapper, Display> impl
             if (time.minusDays(7).isBefore(ad.getStartTime())) {
                 LambdaQueryWrapper<DisplayLog> queryWrapperDay = new LambdaQueryWrapper<>();
                 queryWrapperDay.eq(DisplayLog::getAdId, adId);
-                queryWrapperDay.eq(DisplayLog::getUpdateTime, time.minusDays(1));
+                queryWrapperDay.ge(DisplayLog::getUpdateTime, time.minusDays(1)).or().le(DisplayLog::getUpdateTime, time);
                 List<DisplayLog> listDay = displayLogService.list(queryWrapperDay);
                 DisplayLog displayLogDay = listDay.get(0);
                 int displayDay = displayAll - displayLogDay.getDisplayCount();
@@ -111,7 +111,7 @@ public class DisplayServiceImpl extends ServiceImpl<DisplayMapper, Display> impl
 
                     LambdaQueryWrapper<DisplayLog> queryWrapperDay = new LambdaQueryWrapper<>();
                     queryWrapperDay.eq(DisplayLog::getAdId, adId);
-                    queryWrapperDay.eq(DisplayLog::getUpdateTime, time.minusDays(1));
+                    queryWrapperDay.ge(DisplayLog::getUpdateTime, time.minusDays(1)).or().le(DisplayLog::getUpdateTime, time);
                     List<DisplayLog> listDay = displayLogService.list(queryWrapperDay);
                     DisplayLog displayLogDay = listDay.get(0);
                     int displayDay = displayAll - displayLogDay.getDisplayCount();
@@ -121,7 +121,7 @@ public class DisplayServiceImpl extends ServiceImpl<DisplayMapper, Display> impl
 
                     LambdaQueryWrapper<DisplayLog> queryWrapperWeek = new LambdaQueryWrapper<>();
                     queryWrapperWeek.eq(DisplayLog::getAdId, adId);
-                    queryWrapperWeek.eq(DisplayLog::getUpdateTime, time.minusDays(7));
+                    queryWrapperWeek.ge(DisplayLog::getUpdateTime, time.minusDays(7)).or().le(DisplayLog::getUpdateTime, time);
                     List<DisplayLog> displayLogWeek = displayLogService.list(queryWrapperWeek);
                     DisplayLog listWeek = displayLogWeek.get(0);
                     int displayWeek = displayAll - listWeek.getDisplayCount();
@@ -150,7 +150,7 @@ public class DisplayServiceImpl extends ServiceImpl<DisplayMapper, Display> impl
                 } else {
                     LambdaQueryWrapper<DisplayLog> queryWrapperDay = new LambdaQueryWrapper<>();
                     queryWrapperDay.eq(DisplayLog::getAdId, adId);
-                    queryWrapperDay.eq(DisplayLog::getUpdateTime, time.minusDays(1));
+                    queryWrapperDay.ge(DisplayLog::getUpdateTime, time.minusDays(1)).or().le(DisplayLog::getUpdateTime, time);
                     List<DisplayLog> listDay = displayLogService.list(queryWrapperDay);
                     DisplayLog displayLogDay = listDay.get(0);
                     int displayDay = displayAll - displayLogDay.getDisplayCount();
@@ -161,7 +161,7 @@ public class DisplayServiceImpl extends ServiceImpl<DisplayMapper, Display> impl
 
                     LambdaQueryWrapper<DisplayLog> queryWrapperWeek = new LambdaQueryWrapper<>();
                     queryWrapperWeek.eq(DisplayLog::getAdId, adId);
-                    queryWrapperWeek.eq(DisplayLog::getUpdateTime, time.minusDays(7));
+                    queryWrapperWeek.ge(DisplayLog::getUpdateTime, time.minusDays(7)).or().le(DisplayLog::getUpdateTime, time);
                     List<DisplayLog> listWeek = displayLogService.list(queryWrapperWeek);
                     DisplayLog displayLogWeek = listWeek.get(0);
                     int displayWeek = displayAll - displayLogWeek.getDisplayCount();
@@ -171,7 +171,7 @@ public class DisplayServiceImpl extends ServiceImpl<DisplayMapper, Display> impl
 
                     LambdaQueryWrapper<DisplayLog> queryWrapperMonth = new LambdaQueryWrapper<>();
                     queryWrapperMonth.eq(DisplayLog::getAdId, adId);
-                    queryWrapperMonth.eq(DisplayLog::getUpdateTime, time.minusDays(7));
+                    queryWrapperMonth.ge(DisplayLog::getUpdateTime, time.minusMonths(1)).or().le(DisplayLog::getUpdateTime, time);
                     List<DisplayLog> listMonth = displayLogService.list(queryWrapperMonth);
                     DisplayLog displayLogMonth = listMonth.get(0);
                     Integer displayMonth = displayAll - displayLogMonth.getDisplayCount();
@@ -213,7 +213,7 @@ public class DisplayServiceImpl extends ServiceImpl<DisplayMapper, Display> impl
             for (int i = 0; i < 12; i++) {
                 LambdaQueryWrapper<DisplayLog> queryWrapperPerHour = new LambdaQueryWrapper<>();
                 queryWrapperPerHour.eq(DisplayLog::getAdId, adId);
-                queryWrapperPerHour.eq(DisplayLog::getUpdateTime, time.minusHours(12).plusHours(i));
+                queryWrapperPerHour.ge(DisplayLog::getUpdateTime, time.minusHours(12).plusHours(i)).or().le(DisplayLog::getUpdateTime, time.minusHours(12).plusHours(i + 1));
                 List<DisplayLog> listPerHour = displayLogService.list(queryWrapperPerHour);
                 DisplayLog displayLogPerHour = listPerHour.get(0);
                 displayPerHour = displayLogPerHour.getDisplayCount() - displayPerHour;
@@ -231,7 +231,7 @@ public class DisplayServiceImpl extends ServiceImpl<DisplayMapper, Display> impl
             for (int i = 0; i < dur.toHours(); i++) {
                 LambdaQueryWrapper<DisplayLog> queryWrapperPerHour = new LambdaQueryWrapper<>();
                 queryWrapperPerHour.eq(DisplayLog::getAdId, adId);
-                queryWrapperPerHour.eq(DisplayLog::getUpdateTime, time.minusDays(dur.toHours()).plusHours(i));
+                queryWrapperPerHour.ge(DisplayLog::getUpdateTime, time.minusDays(dur.toHours()).plusHours(i)).or().le(DisplayLog::getUpdateTime, time.minusDays(dur.toHours()).plusHours(i + 1));
                 List<DisplayLog> listPerHour = displayLogService.list(queryWrapperPerHour);
                 DisplayLog displayLogPerHour = listPerHour.get(0);
                 displayPerHour = displayLogPerHour.getDisplayCount() - displayPerHour;

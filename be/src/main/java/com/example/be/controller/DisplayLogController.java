@@ -36,7 +36,7 @@ public class DisplayLogController {
 
     /**
      * 投放广告并更新广告的投放数据和转化率
-     * @param applicationId
+     * @param applicationId appID
      * @return
      */
     @GetMapping("/display")
@@ -54,7 +54,7 @@ public class DisplayLogController {
     /**
      * 更新广告的点击数据和转化率
      *
-     * @param applicationId 广告ID
+     * @param applicationId appID
      */
     @GetMapping("/click")
     @Transactional
