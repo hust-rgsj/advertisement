@@ -9,11 +9,15 @@ const TopBar = () => {
     navigate("../create");
   };
 
+  const refreshHandler = () => {
+    window.location.reload();
+  };
+
   return (
     <div className="top-bar">
       <p className="top-title">我的广告</p>
       <div className="flex-item"></div>
-      <div className="top-refresh">
+      <div className="top-refresh" onClick={refreshHandler}>
         <img src={refreshImg}></img>
       </div>
       <div className="top-btn" onClick={clickHandler}>

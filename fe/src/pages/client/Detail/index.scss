@@ -56,3 +56,16 @@
     }
   }
 }
+
+.pay-container {
+  display: flex;
+  align-items: center;
+
+  & > button {
+    margin-right: 24px;
+  }
+}
+
+.pay-price {
+  margin-bottom: 8px;
+}

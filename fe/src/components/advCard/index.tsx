@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import "./index.scss";
 import { AdvCardData } from "@/type/home";
+import { Tag } from "antd";
 
 interface AdvCardProps {
   advCardData: AdvCardData;
@@ -34,9 +35,20 @@ const AdvCard = (props: AdvCardProps) => {
         </div>
       </div>
       <div className="adv-time">
-        <p></p>
+        <p>{`广告投放时间：${
+          advCardData.startTime && advCardData.endTime
+            ? advCardData.startTime.substring(
+                0,
+                advCardData.startTime.indexOf("T")
+              ) +
+              " ~ " +
+              advCardData.endTime.substring(0, advCardData.endTime.indexOf("T"))
+            : "未定"
+        }`}</p>
       </div>
-      <div className="adv-tag"></div>
+      <Tag color={advCardData.status === 2222 ? "#87d068" : "#f50"}>
+        {advCardData.status === 2222 ? "正在投放" : "待投放"}
+      </Tag>
     </div>
   );
 };

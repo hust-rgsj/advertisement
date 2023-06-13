@@ -8,6 +8,7 @@ import SideBar from "./SideBar";
 import Create from "../Create";
 import Detail from "../Detail";
 import Charge from "../Charge";
+import Data from "../Data";
 
 const CHome = (): JSX.Element => {
   return (
@@ -23,6 +24,7 @@ const CHome = (): JSX.Element => {
               <Route path="/create" element={<Create />}></Route>
               <Route path="/detail" element={<Detail />}></Route>
               <Route path="/charge" element={<Charge />}></Route>
+              <Route path="/data" element={<Data />}></Route>
             </Routes>
           </div>
         </Layout>

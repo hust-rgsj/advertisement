@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+}
+
+.message-list {
+  padding: 16px 64px;
+  min-width: 600px;
+}
+
+.btn-container {
+  margin-top: 24px;
+  margin-left: 48px;
+  display: flex;
+
+  & > button {
+    margin-right: 16px;
+  }
+}

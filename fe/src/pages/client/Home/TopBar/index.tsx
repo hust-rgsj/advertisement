@@ -8,19 +8,35 @@ import { useNavigate } from "react-router-dom";
 const TopBar = () => {
   const navigate = useNavigate();
 
+  const homeHandler = () => {
+    navigate("/home");
+  };
+
+  const cartHandler = () => {
+    navigate("/cart");
+  };
+
+  const messageHandler = () => {
+    navigate("/message");
+  };
+
+  const userHandler = () => {
+    navigate("/user");
+  };
+
   return (
     <Header className="client-header">
-      <div className="header-logo">
+      <div className="header-logo" onClick={homeHandler}>
         <p>Logo</p>
       </div>
       <div className="flex-item"></div>
-      <div className="header-icon">
+      <div className="header-icon" onClick={cartHandler}>
         <img src={shoppingImg}></img>
       </div>
-      <div className="header-icon">
+      <div className="header-icon" onClick={messageHandler}>
         <img src={messageImg}></img>
       </div>
-      <div className="header-avatar">
+      <div className="header-avatar" onClick={userHandler}>
         <img src={userImg}></img>
       </div>
     </Header>

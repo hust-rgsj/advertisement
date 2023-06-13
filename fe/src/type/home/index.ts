@@ -11,8 +11,8 @@ interface AdvCardData {
   title: string;
   description: string;
   url: string;
-  startTime: number | null;
-  endTime: number | null;
+  startTime: string | null;
+  endTime: string | null;
   status: number;
 }
 
@@ -28,6 +28,7 @@ interface Adv {
   status: number;
   startTime: string | null;
   endTime: string | null;
+  price: number;
 }
 
 export type { SideItem, AdvCardData, AdvList, Adv };

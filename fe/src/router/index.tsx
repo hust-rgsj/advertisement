@@ -13,6 +13,10 @@ const CList = lazy(() => import("@pages/client/List"));
 const CCreate = lazy(() => import("@pages/client/Create"));
 const CDetail = lazy(() => import("@pages/client/Detail"));
 const CCharge = lazy(() => import("@pages/client/Charge"));
+const CMessage = lazy(() => import("@pages/client/Message"));
+const CUser = lazy(() => import("@pages/client/User"));
+const CCart = lazy(() => import("@pages/client/Cart"));
+const CData = lazy(() => import("@pages/client/Data"));
 const AHome = lazy(() => import("@pages/admin/Home"));
 const AAdvList = lazy(() => import("@pages/admin/AdvList"));
 const AUsers = lazy(() => import("@/pages/admin/users"));
@@ -58,7 +62,23 @@ const router = createBrowserRouter([
         path: "charge",
         element: lazyLoad(CCharge),
       },
+      {
+        path: "data",
+        element: lazyLoad(CData),
+      },
     ],
+  },
+  {
+    path: "/message",
+    element: lazyLoad(CMessage),
+  },
+  {
+    path: "/user",
+    element: lazyLoad(CUser),
+  },
+  {
+    path: "/cart",
+    element: lazyLoad(CCart),
   },
   {
     path: "/admin",
