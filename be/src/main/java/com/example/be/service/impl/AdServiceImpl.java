@@ -72,7 +72,8 @@ public class AdServiceImpl extends ServiceImpl<AdMapper, Ad> implements IAdServi
         LocalDateTime time = LocalDateTime.now();
         LambdaQueryWrapper<Ad> queryWrapper1 = new LambdaQueryWrapper<>();
         queryWrapper1.eq(Ad::getCustomerId,customerId);
-        queryWrapper1.eq(Ad::getStatus, Status.ON).ge(Ad::getEndTime, time);
+        queryWrapper1.eq(Ad::getStatus, Status.ON);
+        queryWrapper1.le(Ad::getEndTime, time);
         List<Ad> list1 = list(queryWrapper1);
         for (Ad ad : list1) {
             ad.setStatus(Status.OFF);

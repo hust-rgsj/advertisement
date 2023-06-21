@@ -4,6 +4,11 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: mimashi@180202
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
 
 mybatis-plus:
   configuration:
@@ -23,6 +28,9 @@ aliyun:
     access-key-secret: vU2wTbDgSHLQIr52ZlLaOCCukh3WwH
     bucket-name: web-advertisement
     endpoint: https://oss-cn-hangzhou.aliyuncs.com
+
 server:
   port: 9526
   address: 0.0.0.0
+  tomcat:
+    max-http-form-post-size: 100MB
